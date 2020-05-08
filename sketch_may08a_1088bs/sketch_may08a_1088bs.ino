@@ -5,7 +5,9 @@
 /********************************************
 
     8 rows (R1-R8), 8 cols (C1-C8)
+
     R1 --|>|-- C1
+    row(HIGH) ....+LED-.... col(LOW)
     
     Schematic physical pinout:
     
@@ -43,5 +45,37 @@ void setup() {
 }
 
 void loop() {
-  // FIXME
+  int x, y, xi, yi;
+  
+  // Iterate dot position
+  for (y = 0; y < 8; y++) {
+    for (x = 0; x < 8; x++) {
+      
+      // One dot, all the screen
+
+      for (yi = 0; yi < 8; yi++) {
+
+        // Set desired row level
+        if (y == yi) {
+          // Row pins to anodes, HIGH (current) = LED is on
+          digitalWrite(row_pins[yi], HIGH);
+        } else {
+          digitalWrite(row_pins[yi], LOW);
+        }
+
+        for (xi = 0; xi < 8; xi++) {
+          if (x == xi) {
+            // Note, it's not the same as rows!
+            // Col pins to cathodes, LOW (drain) = LED is on 
+            digitalWrite(col_pins[xi], LOW);
+          } else {
+            // HIGH means no drain, so LED is off!
+            digitalWrite(col_pins[xi], HIGH);
+          }
+        }
+      }
+
+      delay(50);    
+    }
+  }
 }
