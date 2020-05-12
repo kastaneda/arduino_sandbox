@@ -34,48 +34,51 @@
 //
 // NOTE: that's my current breadboard setup!
 //
-int row_pins[8] = {11, 10,  9,  8,  7,  6,  5,  4};
-int col_pins[8] = { 3,  2, A0, A1, A2, A3, A4, A5};
+unsigned char row_pins[8] = {11, 10,  9,  8,  7,  6,  5,  4};
+unsigned char col_pins[8] = { 3,  2, A0, A1, A2, A3, A4, A5};
 
 void setup() {
-   for (int i = 0; i < 8; i++) {
+   for (unsigned char i = 0; i < 8; i++) {
      pinMode(col_pins[i], OUTPUT);
      pinMode(row_pins[i], OUTPUT);
+     digitalWrite(col_pins[i], HIGH);
+     digitalWrite(row_pins[i], LOW);
    }
 }
 
-void loop() {
-  int x, y, xi, yi;
-  
-  // Iterate dot position
-  for (y = 0; y < 8; y++) {
-    for (x = 0; x < 8; x++) {
-      
-      // One dot, all the screen
+void hide_row(unsigned char row) {
+  // Damn, I 
+  digitalWrite(col_pins[row], HIGH);
+}
 
-      for (yi = 0; yi < 8; yi++) {
-
-        // Set desired row level
-        if (y == yi) {
-          // Row pins to anodes, HIGH (current) = LED is on
-          digitalWrite(row_pins[yi], HIGH);
-        } else {
-          digitalWrite(row_pins[yi], LOW);
-        }
-
-        for (xi = 0; xi < 8; xi++) {
-          if (x == xi) {
-            // Note, it's not the same as rows!
-            // Col pins to cathodes, LOW (drain) = LED is on 
-            digitalWrite(col_pins[xi], LOW);
-          } else {
-            // HIGH means no drain, so LED is off!
-            digitalWrite(col_pins[xi], HIGH);
-          }
-        }
-      }
-
-      delay(50);    
-    }
+void show_row(unsigned char row, unsigned char data) {
+  for (unsigned char i = 0; i < 8; i++) {
+    digitalWrite(row_pins[i], data & 1);
+    data = data >> 1;
   }
+  digitalWrite(col_pins[row], LOW);
+}
+
+unsigned char videoRAM[8] = {
+  B11111111,
+  B10000001,
+  B10100101,
+  B10011001,
+  B10011001,
+  B10100101,
+  B10000001,
+  B11111111,
+};
+
+void loop() {
+  unsigned char row, row_prev;
+
+  row_prev = 7;
+  for (row = 0; row < 8; row++) {
+    hide_row(row_prev);
+    show_row(row, videoRAM[row]);
+    row_prev = row;
+    delayMicroseconds(500);
+  }
+
 }
