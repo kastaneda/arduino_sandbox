@@ -59,16 +59,25 @@ void show_row(unsigned char row, unsigned char data) {
   digitalWrite(col_pins[row], LOW);
 }
 
-unsigned char videoRAM[8] = {
-  B11111111,
-  B10000001,
-  B10100101,
-  B10011001,
-  B10011001,
-  B10100101,
-  B10000001,
-  B11111111,
-};
+//unsigned char videoRAM[8] = {
+//  B11111111,
+//  B10000001,
+//  B10100101,
+//  B10011001,
+//  B10011001,
+//  B10100101,
+//  B10000001,
+//  B11111111,
+//};
+
+// include "smile.xbm" -- da fuck? no suck file, WTF
+
+// Okay, I'll put it right here
+#define smile_width 8
+#define smile_height 8
+static unsigned char smile_bits[] = {
+   0x3c, 0x7e, 0xdb, 0xff, 0xff, 0xdb, 0x66, 0x3c };
+
 
 void loop() {
   unsigned char row, row_prev;
@@ -76,7 +85,7 @@ void loop() {
   row_prev = 7;
   for (row = 0; row < 8; row++) {
     hide_row(row_prev);
-    show_row(row, videoRAM[row]);
+    show_row(row, smile_bits[row]);
     row_prev = row;
     delayMicroseconds(500);
   }
