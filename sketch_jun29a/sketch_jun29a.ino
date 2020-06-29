@@ -1,10 +1,9 @@
-// Based on
-// https://create.arduino.cc/projecthub/abdularbi17/ultrasonic-sensor-hc-sr04-with-arduino-tutorial-327ff6
 
-
+// Ultrasonic sensor module HC-SR04
 #define trigPin 9
 #define echoPin 10
 
+// Buzzer TMB1205
 #define buzzerPin 13
 
 void setup() {
@@ -14,27 +13,34 @@ void setup() {
   digitalWrite(buzzerPin, LOW);
 }
 
-void loop() {
-  long duration;
-  int distance;
-  
-  // Clears the trigPin condition
+// Get sensor echo duration in microseconds
+// distance_cm = duration_microseconds * 0.034 / 2;
+unsigned long measureEchoDuration() {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
-  // Calculating the distance
-  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  return pulseIn(echoPin, HIGH);
+}
 
-  // Very dumb
-  delay(distance * 10);
-
-  // beep
+// Short beep
+void beep() {
   digitalWrite(buzzerPin, HIGH);
-  delay(50);
+  delay(35);
   digitalWrite(buzzerPin, LOW);
+}
+
+// Desired delay between beeps (milliseconds), depending on sensor distance (microseconds)
+unsigned long delayBetweenBeeps(unsigned long echoDuration) {
+  // Something very dumb: echoDuration / 8
+  return echoDuration >> 3;
+}
+
+void loop() {
+  // TODO
+  // unsigned long next_beep;
+
+  delay(delayBetweenBeeps(measureEchoDuration()));
+  beep();
 }
