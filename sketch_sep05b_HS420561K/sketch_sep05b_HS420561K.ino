@@ -117,23 +117,18 @@ void setDigitPosition(byte positionEnabled) {
 static int pow10[] = { 1, 10, 100, 1000, 10000 };
 
 void loop() {
-    // from 0000 to 9999
-    for (int counter = 0; counter < 10000; counter++) {
-        // show every digit N times
-        for (int frame = 0; frame < 25; frame++) {
-            int reminder = counter;
-            for (int digitPosition = 0; digitPosition < 4; digitPosition++) {
-                // continuously get all decimal digits in counter
-                byte digitValue = reminder % 10;
-                reminder = reminder / 10;
+    int reminder = (millis() / 100) % 10000;
 
-                // show this
-                setDecimalDigit(digitValue);
-                setDigitPosition(digitPosition);
-                
-                // time to show this digit
-                delay(3);
-            }
-        }
+    for (int digitPosition = 0; digitPosition < 4; digitPosition++) {
+        // continuously get all decimal digits in counter
+        byte digitValue = reminder % 10;
+        reminder = reminder / 10;
+
+        // show this
+        setDecimalDigit(digitValue);
+        setDigitPosition(digitPosition);
+        
+        // time to show this digit
+        delay(3);
     }
 }
