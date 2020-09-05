@@ -15,7 +15,7 @@
 //  E    C      6 = A   C D E F G       0b01111101
 //  E    C      7 = A B C               0b00000111
 //  E    C      8 = A B C D E F G       0b01111111
-//   DDDD       9 = A B C D   F G       0b01111011
+//   DDDD       9 = A B C D   F G       0b01101111
 //
 ////////////////////////////////////////////////////////////////////////
 //
@@ -70,7 +70,7 @@ byte cathodePins[] = { A3, A2, A1, A0 };
 // uhmmm, you knowm, this is kinda... font!
 byte decimalToSegments[] = {
     0b00111111, 0b00000110, 0b01011011, 0b01001111, 0b01100110,
-    0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b01111011 };
+    0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b01101111 };
 
 void setup() {
     for (int i = 0; i < sizeof(segmentPins); i++) {
@@ -109,7 +109,7 @@ void setDigitPosition(byte positionEnabled) {
             digitalWrite(cathodePins[i], LOW);
         } else {
             // HIGH on cathode disables drain (thus, no current)
-            digitalWrite(cathodePins[i], LOW);
+            digitalWrite(cathodePins[i], HIGH);
         }
     }
 }
@@ -120,7 +120,7 @@ void loop() {
     // from 0000 to 9999
     for (int counter = 0; counter < 10000; counter++) {
         // show every digit N times
-        for (int frame = 0; frame < 100; frame++) {
+        for (int frame = 0; frame < 25; frame++) {
             int reminder = counter;
             for (int digitPosition = 0; digitPosition < 4; digitPosition++) {
                 // continuously get all decimal digits in counter
@@ -130,9 +130,9 @@ void loop() {
                 // show this
                 setDecimalDigit(digitValue);
                 setDigitPosition(digitPosition);
-
+                
                 // time to show this digit
-                delay(100);
+                delay(3);
             }
         }
     }
