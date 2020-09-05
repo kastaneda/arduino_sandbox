@@ -100,6 +100,16 @@ void setDecimalDigit(byte decimal) {
 }
 
 // one digit position enabled, others disabled
+void setDigitNone() {
+    // loop over all four digits
+    for (int i = 0; i < sizeof(cathodePins); i++) {
+        // HIGH on cathode disables drain (thus, no current)
+        digitalWrite(cathodePins[i], HIGH);
+    }
+}
+
+
+// one digit position enabled, others disabled
 void setDigitPosition(byte positionEnabled) {
     // loop over all four digits
     for (int i = 0; i < sizeof(cathodePins); i++) {
@@ -125,6 +135,7 @@ void loop() {
         reminder = reminder / 10;
 
         // show this
+        setDigitNone();
         setDecimalDigit(digitValue);
         setDigitPosition(digitPosition);
         
