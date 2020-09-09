@@ -119,7 +119,7 @@ void setDigitValue(byte digitValue) {
 void setDigitPosition(byte digitPosition) {
     // loop over all four digits
     for (byte i = 0; i < sizeof(cathodePins); i++) {
-        // if this 
+        // if this is one to show
         if (i == digitPosition) {
             // LOW on cathode enables drain sink
             digitalWrite(cathodePins[i], LOW);
@@ -136,7 +136,7 @@ void clearDigitPosition() {
 }
 
 // all together
-void showDigit(byte decimalValue, byte digitPosition, unsigned int microseconds) {
+void showOneDigit(byte decimalValue, byte digitPosition, unsigned int microseconds) {
   setDigitValue(decimalValue);
   setDigitPosition(digitPosition);
   delayMicroseconds(microseconds);
@@ -153,14 +153,11 @@ void setup() {
 }
 
 void loop() {
-    int reminder = (millis() / 100) % 10000;
+    unsigned int digitsToDisplay = (millis() >> 8) & 0xFFFF;
 
     for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
-        // continuously get all decimal digits in counter
-        byte digitValue = reminder % 10;
-        reminder = reminder / 10;
-
-        // show this
-        showDigit(digitValue, digitPosition, 500);
+        byte digitValue = digitsToDisplay & 0x0F;
+        digitsToDisplay = digitsToDisplay >> 4;
+        showOneDigit(digitValue, digitPosition, 50);
     }
 }
