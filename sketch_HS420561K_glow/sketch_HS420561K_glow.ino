@@ -146,7 +146,6 @@ void showAllDigits(unsigned int value, unsigned int microseconds) {
     for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
         byte digitValue = value % 10;
         value = value / 10;
-
         showOneDigit(digitValue, digitPosition, 50);
     }  
 }
@@ -160,12 +159,20 @@ void setup() {
     }
 }
 
-void loop() {
-    unsigned int digitsToDisplay = (millis() >> 8) & 0xFFFF;
+unsigned int previousValue = 0;
 
-    for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
-        byte digitValue = digitsToDisplay & 0x0F;
-        digitsToDisplay = digitsToDisplay >> 4;
-        showOneDigit(digitValue, digitPosition, 50);
+void loop() {
+    unsigned int digitsToDisplay = (millis() / 1000) % 10000;
+
+    if (digitsToDisplay == previousValue) {
+        // just refresh
+        showAllDigits(digitsToDisplay, 100);
+    } else {
+        // cursed, unoptimized transition animation
+        for (unsigned int frameDelay = 10; frameDelay < 150; frameDelay += 1) {
+           showAllDigits(previousValue, 160-frameDelay);
+           showAllDigits(digitsToDisplay, frameDelay);
+        }
+        previousValue = digitsToDisplay;
     }
 }
