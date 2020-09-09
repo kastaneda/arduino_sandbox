@@ -89,8 +89,6 @@ byte digitToSegments[] = {
     0b01110001    // F
 };
 
-static unsigned int pow10[] = { 1, 10, 100, 1000, 10000 };
-
 // configure output wires connected to seven-segments
 // all digit positions connected to same segments
 // input value is bitmask
@@ -135,12 +133,22 @@ void clearDigitPosition() {
   setDigitPosition(255); // value far beyond
 }
 
-// all together
+// all together, one digit
 void showOneDigit(byte decimalValue, byte digitPosition, unsigned int microseconds) {
   setDigitValue(decimalValue);
   setDigitPosition(digitPosition);
   delayMicroseconds(microseconds);
   clearDigitPosition();
+}
+
+// all together, all digits
+void showAllDigits(unsigned int value, unsigned int microseconds) {
+    for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
+        byte digitValue = value % 10;
+        value = value / 10;
+
+        showOneDigit(digitValue, digitPosition, 50);
+    }  
 }
 
 void setup() {
