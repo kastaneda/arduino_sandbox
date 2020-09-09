@@ -108,12 +108,6 @@ void setDigitSegments(byte segmentsBitmask) {
     }
 }
 
-// configure output wires connected to seven-segments
-// input value is one (hexa)decimal digit
-void setDigitValue(byte digitValue) {
-    setDigitSegments(digitToSegments[digitValue]);
-}
-
 // configure output wires connected to common cathodes
 // one digit position enabled, all others disabled
 void setDigitPosition(byte digitPosition) {
@@ -137,6 +131,16 @@ void clearDigitPosition() {
 
 ////////////////////////////////////////////////////////////////////////
 
+/*
+
+// Not in use in this version
+
+// configure output wires connected to seven-segments
+// input value is one (hexa)decimal digit
+void setDigitValue(byte digitValue) {
+    setDigitSegments(digitToSegments[digitValue]);
+}
+
 // all together, one digit
 void showOneDigit(byte decimalValue, byte digitPosition, unsigned int microseconds) {
   setDigitValue(decimalValue);
@@ -154,10 +158,12 @@ void showAllDigits(unsigned int value, unsigned int microseconds) {
     }
 }
 
+*/
+
 ////////////////////////////////////////////////////////////////////////
 
-unsigned int value;
-unsigned int valueNext;
+unsigned int value = 9999;
+unsigned int valueNext = 0;
 
 // kinda videoRAM
 byte segments[4] = { 0, 0, 0, 0 };
