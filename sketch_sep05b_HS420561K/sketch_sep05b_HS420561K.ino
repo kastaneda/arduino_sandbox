@@ -73,10 +73,10 @@ byte decimalToSegments[] = {
     0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b01101111 };
 
 void setup() {
-    for (int i = 0; i < sizeof(segmentPins); i++) {
+    for (byte i = 0; i < sizeof(segmentPins); i++) {
         pinMode(segmentPins[i], OUTPUT);
     }
-    for (int i = 0; i < sizeof(cathodePins); i++) {
+    for (byte i = 0; i < sizeof(cathodePins); i++) {
         pinMode(cathodePins[i], OUTPUT);
     }
 }
@@ -87,7 +87,7 @@ void setDecimalDigit(byte decimal) {
     byte fontBitMask = decimalToSegments[decimal];
 
     // loop over all output legs
-    for (int i = 0; i < sizeof(segmentPins); i++) {
+    for (byte i = 0; i < sizeof(segmentPins); i++) {
         // check one bit
         if (fontBitMask & (1 << i)) {
             // turn on this segment's LED
@@ -102,7 +102,7 @@ void setDecimalDigit(byte decimal) {
 // one digit position enabled, others disabled
 void setDigitNone() {
     // loop over all four digits
-    for (int i = 0; i < sizeof(cathodePins); i++) {
+    for (byte i = 0; i < sizeof(cathodePins); i++) {
         // HIGH on cathode disables drain (thus, no current)
         digitalWrite(cathodePins[i], HIGH);
     }
@@ -112,7 +112,7 @@ void setDigitNone() {
 // one digit position enabled, others disabled
 void setDigitPosition(byte positionEnabled) {
     // loop over all four digits
-    for (int i = 0; i < sizeof(cathodePins); i++) {
+    for (byte i = 0; i < sizeof(cathodePins); i++) {
         // if this 
         if (i == positionEnabled) {
             // LOW on cathode enables drain sink
@@ -129,7 +129,7 @@ static int pow10[] = { 1, 10, 100, 1000, 10000 };
 void loop() {
     int reminder = (millis() / 100) % 10000;
 
-    for (int digitPosition = 0; digitPosition < 4; digitPosition++) {
+    for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
         // continuously get all decimal digits in counter
         byte digitValue = reminder % 10;
         reminder = reminder / 10;
