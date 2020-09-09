@@ -58,7 +58,7 @@
 //                      |   |   |   |   |   |
 //                      1   2   3   4   5   6
 //
-//  
+//
 ////////////////////////////////////////////////////////////////////////
 
 
@@ -88,6 +88,8 @@ byte digitToSegments[] = {
     0b01111001,   // E
     0b01110001    // F
 };
+
+////////////////////////////////////////////////////////////////////////
 
 // configure output wires connected to seven-segments
 // all digit positions connected to same segments
@@ -133,6 +135,8 @@ void clearDigitPosition() {
   setDigitPosition(255); // value far beyond
 }
 
+////////////////////////////////////////////////////////////////////////
+
 // all together, one digit
 void showOneDigit(byte decimalValue, byte digitPosition, unsigned int microseconds) {
   setDigitValue(decimalValue);
@@ -147,7 +151,87 @@ void showAllDigits(unsigned int value, unsigned int microseconds) {
         byte digitValue = value % 10;
         value = value / 10;
         showOneDigit(digitValue, digitPosition, 50);
-    }  
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+
+unsigned int value;
+unsigned int valueNext;
+
+// kinda videoRAM
+byte segments[4] = { 0, 0, 0, 0 };
+byte segmentsNext[4] = { 0, 0, 0, 0 };
+
+// refresh display & show all digits, one by one
+void showSegments(unsigned int frameDelay) {
+      for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
+          setDigitSegments(segments[digitPosition]);
+          setDigitPosition(digitPosition);
+          delayMicroseconds(frameDelay);
+          clearDigitPosition();
+      }
+}
+
+// refresh display, show few frames
+void showSegmentsTimes(unsigned int frameDelay, unsigned int times) {
+    for (unsigned int frame = 0; frame < times; frame++) {
+        showSegments(frameDelay);
+    }
+}
+
+// do the magic: transition from one image and to another
+void showSegmentsTransition(unsigned int frameDelay, unsigned int frameDelayNext) {
+    for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
+        // show old
+        setDigitSegments(segments[digitPosition]);
+        setDigitPosition(digitPosition);
+        delayMicroseconds(frameDelay);
+
+        // show new
+        setDigitSegments(segmentsNext[digitPosition]);
+        delayMicroseconds(frameDelayNext);
+
+        clearDigitPosition();
+    }
+}
+
+// misc: convert valueNext to segments bitmasks in segmentsNext
+void prepareSegmentsNext() {
+    unsigned int reminder = valueNext;
+
+    for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
+        byte digitValue = reminder % 10;
+        reminder = reminder / 10;
+
+        segmentsNext[digitPosition] = digitToSegments[digitValue];
+    }
+}
+
+// do some weird thing: transition should fade first
+void prepareSegmentsNextFade() {
+    for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
+        // on positions, where digit value is changed,..
+        if (segmentsNext[digitPosition] != segments[digitPosition]) {
+            // do fade-out (zero == no segments)
+            segmentsNext[digitPosition] = 0;
+        }
+    }
+}
+
+// misc: copy segmentsNext to segments
+void applySegmentsNext() {
+    for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
+        segments[digitPosition] = segmentsNext[digitPosition];
+    }
+}
+
+// magic!
+// transition from segments to segmentsNext
+void glowTransition() {
+    for (unsigned int frame = 5; frame < 195; frame++) {
+        showSegmentsTransition(200-frame, frame);
+    }
 }
 
 void setup() {
@@ -159,32 +243,25 @@ void setup() {
     }
 }
 
-
-byte videoRAM[4] = { digitToSegments[4], digitToSegments[3], digitToSegments[2], digitToSegments[1] };
-
-void showVideoRAM(unsigned int frameDelayOn, unsigned int frameDelayOff) {
-      for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
-          setDigitSegments(videoRAM[digitPosition]);
-          setDigitPosition(digitPosition);
-          delayMicroseconds(frameDelayOn);
-          clearDigitPosition();
-          delayMicroseconds(frameDelayOff);
-      }
-}
-
 void loop() {
+    // system timer
+    valueNext = millis() / 1000 % 10000;
 
-    for (unsigned int frame = 1; frame < 399; frame++) {
-        showVideoRAM(frame, 500-frame);
+    if (value == valueNext) {
+        // no changes
+        showSegmentsTimes(200, 50);
+    } else {
+        // fade-out
+        prepareSegmentsNext();
+        prepareSegmentsNextFade();
+        glowTransition();
+        applySegmentsNext();
+
+        // fade-in
+        prepareSegmentsNext();
+        glowTransition();
+        applySegmentsNext();
+
+        value = valueNext;
     }
-    
-    showAllDigits(1234, 50000);
-
-    for (unsigned int frame = 399; frame > 1; frame--) {
-        showVideoRAM(frame, 500-frame);
-    }
-
-    //clearDigitPosition();
-    //delay(1000);
-
 }
