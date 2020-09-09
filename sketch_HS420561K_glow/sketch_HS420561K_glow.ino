@@ -159,20 +159,32 @@ void setup() {
     }
 }
 
-unsigned int previousValue = 0;
+
+byte videoRAM[4] = { digitToSegments[4], digitToSegments[3], digitToSegments[2], digitToSegments[1] };
+
+void showVideoRAM(unsigned int frameDelayOn, unsigned int frameDelayOff) {
+      for (byte digitPosition = 0; digitPosition < 4; digitPosition++) {
+          setDigitSegments(videoRAM[digitPosition]);
+          setDigitPosition(digitPosition);
+          delayMicroseconds(frameDelayOn);
+          clearDigitPosition();
+          delayMicroseconds(frameDelayOff);
+      }
+}
 
 void loop() {
-    unsigned int digitsToDisplay = (millis() / 1000) % 10000;
 
-    if (digitsToDisplay == previousValue) {
-        // just refresh
-        showAllDigits(digitsToDisplay, 100);
-    } else {
-        // cursed, unoptimized transition animation
-        for (unsigned int frameDelay = 10; frameDelay < 150; frameDelay += 1) {
-           showAllDigits(previousValue, 160-frameDelay);
-           showAllDigits(digitsToDisplay, frameDelay);
-        }
-        previousValue = digitsToDisplay;
+    for (unsigned int frame = 1; frame < 399; frame++) {
+        showVideoRAM(frame, 500-frame);
     }
+    
+    showAllDigits(1234, 50000);
+
+    for (unsigned int frame = 399; frame > 1; frame--) {
+        showVideoRAM(frame, 500-frame);
+    }
+
+    //clearDigitPosition();
+    //delay(1000);
+
 }
