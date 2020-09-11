@@ -2,8 +2,9 @@ TODO: Simplify the wiring!!
 ===========================
 
  - avoid intersections
- - as short as possible
- - 'wrong' order should be 'fixed' on code level
+ - make it as short as possible
+ - 'wrong' / 'random' leg order should be 'fixed' on code level
+ - there should be some space left for 1 buzzer and probably 1 button
 
 Current layout:
 
