@@ -19,7 +19,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 //
-//  My schema:
+//  My schema: (v1)
 //
 //      D9 ---[  R 220Ω ]--- leg 11     (segment A)
 //      D8 ---[  R 220Ω ]--- leg  7     (segment B)
@@ -61,12 +61,13 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-
 // outputs connected to anodes (segments, connected to all digits)
-byte segmentPins[] = { 9, 8, 7, 6, 5, 4, 3, 2 };
+// byte segmentPins[] = { 9, 8, 7, 6, 5, 4, 3, 2 }; // v1
+byte segmentPins[] = { 6, 4, A4, A2, 7, 5, A3, A5 }; // step2.1
 
 // outputs connected to cathodes (one cathode per digit)
-byte cathodePins[] = { A3, A2, A1, A0 };
+// byte cathodePins[] = { A3, A2, A1, A0 }; // v1
+byte cathodePins[] = { A1, 10, 9, 8 }; // step2.1
 
 // uhmmm, you knowm, this is kinda... font!
 // 0xHGFEDCBA
