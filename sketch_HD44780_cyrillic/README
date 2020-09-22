@@ -1,0 +1,1 @@
+echo "Слава Українi!" | ./decode.php > /dev/ttyUSB0
