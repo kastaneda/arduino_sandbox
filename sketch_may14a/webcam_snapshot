@@ -1,0 +1,39 @@
+#!/bin/sh
+
+WEBCAM_DEV=/dev/video0
+WEBCAM_DIR=/mnt/whatever/webcam01
+
+if [ ! -c "$WEBCAM_DEV" ]
+then
+  echo "Device $WEBCAM_DEV does not exist"
+  exit 1
+fi
+
+if [ ! -d "$WEBCAM_DIR" ]
+then
+  echo "Folder $WEBCAM_DIR does not exist"
+  exit 1
+fi
+
+SNAPSHOT_SUBDIR=`date +%F`
+SNAPSHOT_FILENAME=`date +%H-%M.jpg`
+mkdir -p "$WEBCAM_DIR/$SNAPSHOT_SUBDIR"
+
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libv4l/v4l2convert.so \
+GDFONTPATH=/usr/share/fonts/truetype/ttf-dejavu \
+fswebcam \
+  --device "$WEBCAM_DEV" \
+  --resolution 640x480 \
+  --delay 2 \
+  --skip 10 \
+  --frames 3 \
+  --jpeg 95 \
+  --quiet \
+  --banner-colour "#ff000000" \
+  --line-colour "#ff000000" \
+  --text-colour "#55ffffff" \
+  --no-title \
+  --no-info \
+  --timestamp "%Y-%m-%d %H:%M:%S" \
+  --font "DejaVuSansMono:9" \
+  --save "$WEBCAM_DIR/$SNAPSHOT_SUBDIR/$SNAPSHOT_FILENAME" > /dev/null 2>&1
