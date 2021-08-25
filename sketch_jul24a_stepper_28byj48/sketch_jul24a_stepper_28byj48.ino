@@ -17,6 +17,7 @@ void setMotorState(byte bitMaskState) {
   }
 }
 
+/*
 const byte motorStepSequence[8] = {
   B1000,
   B1100,
@@ -27,29 +28,61 @@ const byte motorStepSequence[8] = {
   B0001,
   B1001
 };
+*/
 
-/*
 const byte motorStepSequence[4] = {
   B1000,
   B0100,
   B0010,
   B0001,
 };
-*/
 
 #define motorStopped 0
+
 #define RotateClockwise 1
 #define RotateCounterClockwise -1
 
-void motorRotate(unsigned int rotateSteps, signed char rotateDirection) {
-  const unsigned int stepDelay = 2500;
-  byte step = 0;
+#define pulseWidth 24
+#define pulseDelta 3
 
-  for (unsigned int i = 0; i < rotateSteps; i++) {
-    setMotorState(motorStepSequence[step]);
-    // delayMicroseconds(stepDelay);
-    delay(stepDelay); // FIXME XXX only to debug
+/*
+void motorStateTransition(byte stateOld, byte stateNew) {
+  setMotorState(stateNew);
+  delay(pulseWidth * pulseDelta);
+}
+*/
+
+void motorStateTransition(byte stateOld, byte stateNew) {
+  int delayOld = pulseWidth, delayNew = 0;
+
+  do {
+    if (delayOld > 0) {
+      setMotorState(stateOld);
+      // delayMicroseconds(delayOld);
+      delay(delayOld); // XXX debug
+    }
+
+    if (delayNew > 0) {
+      setMotorState(stateNew);
+      // delayMicroseconds(delayNew);
+      delay(delayNew); // XXX debug
+    }
+
+    delayOld -= pulseDelta;
+    delayNew += pulseDelta;
+  } while (delayOld > 0);
+}
+
+void motorRotate(unsigned long int rotateSteps, signed char rotateDirection) {
+  byte step = 0;
+  byte stateNew;
+  byte stateOld = motorStopped;
+
+  for (unsigned long int i = 0; i < rotateSteps; i++) {
+    stateNew = motorStepSequence[step];
+    motorStateTransition(stateOld, stateNew);
     step = (step + rotateDirection) % sizeof(motorStepSequence);
+    stateOld = stateNew;
   }
 
   setMotorState(motorStopped);
