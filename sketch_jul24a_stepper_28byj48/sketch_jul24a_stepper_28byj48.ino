@@ -28,25 +28,35 @@ const byte motorStepSequence[8] = {
   B1001
 };
 
-void loop(){
-  const unsigned int stepDelay = 1200;
+/*
+const byte motorStepSequence[4] = {
+  B1000,
+  B0100,
+  B0010,
+  B0001,
+};
+*/
+
+#define motorStopped 0
+#define RotateClockwise 1
+#define RotateCounterClockwise -1
+
+void motorRotate(unsigned int rotateSteps, signed char rotateDirection) {
+  const unsigned int stepDelay = 2500;
   byte step = 0;
 
-  for (unsigned int i = 0; i < 4096; i++) {
+  for (unsigned int i = 0; i < rotateSteps; i++) {
     setMotorState(motorStepSequence[step]);
     delayMicroseconds(stepDelay);
-    step = (step + 1) % sizeof(motorStepSequence);
+    step = (step + rotateDirection) % sizeof(motorStepSequence);
   }
 
-  setMotorState(0);
+  setMotorState(motorStopped);
+}
+
+void loop() {
+  motorRotate(4096, RotateClockwise);
   delay(500);
-
-  for (unsigned int i = 0; i < 4096; i++) {
-    setMotorState(motorStepSequence[step]);
-    delayMicroseconds(stepDelay);
-    step = (step - 1) % sizeof(motorStepSequence);
-  }
-
-  setMotorState(0);
+  motorRotate(4096, RotateCounterClockwise);
   delay(500);
 }
