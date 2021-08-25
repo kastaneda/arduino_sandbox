@@ -47,7 +47,8 @@ void motorRotate(unsigned int rotateSteps, signed char rotateDirection) {
 
   for (unsigned int i = 0; i < rotateSteps; i++) {
     setMotorState(motorStepSequence[step]);
-    delayMicroseconds(stepDelay);
+    // delayMicroseconds(stepDelay);
+    delay(stepDelay); // FIXME XXX only to debug
     step = (step + rotateDirection) % sizeof(motorStepSequence);
   }
 
