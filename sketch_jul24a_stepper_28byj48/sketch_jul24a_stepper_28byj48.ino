@@ -42,13 +42,22 @@ const byte motorStepSequence[4] = {
 #define RotateClockwise 1
 #define RotateCounterClockwise -1
 
-#define pulseWidth 24
-#define pulseDelta 3
+//       _      __     ___    ____   _____
+//      | |    |  |   |   |  |    | |
+//      | |    |  |   |   |  |    | |
+// _____| |____|  |___|   |__|    |_|
+
+#define pulseWidth 300
+#define pulseDelta 10
+
+#define microstepDuration pulseWidth              // here: 300 µs
+#define microstepCount    pulseWidth / pulseDelta // here: 30
+#define oneStepDuration   microstepDuration * microstepCount
 
 /*
 void motorStateTransition(byte stateOld, byte stateNew) {
   setMotorState(stateNew);
-  delay(pulseWidth * pulseDelta);
+  delay(oneStepDuration);
 }
 */
 
@@ -58,14 +67,14 @@ void motorStateTransition(byte stateOld, byte stateNew) {
   do {
     if (delayOld > 0) {
       setMotorState(stateOld);
-      // delayMicroseconds(delayOld);
-      delay(delayOld); // XXX debug
+      delayMicroseconds(delayOld);
+      // delay(delayOld); // XXX debug with LEDs
     }
 
     if (delayNew > 0) {
       setMotorState(stateNew);
-      // delayMicroseconds(delayNew);
-      delay(delayNew); // XXX debug
+      delayMicroseconds(delayNew);
+      // delay(delayNew); // XXX debug with LEDs
     }
 
     delayOld -= pulseDelta;
@@ -75,8 +84,8 @@ void motorStateTransition(byte stateOld, byte stateNew) {
 
 void motorRotate(unsigned long int rotateSteps, signed char rotateDirection) {
   byte step = 0;
-  byte stateNew;
   byte stateOld = motorStopped;
+  byte stateNew;
 
   for (unsigned long int i = 0; i < rotateSteps; i++) {
     stateNew = motorStepSequence[step];
