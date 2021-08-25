@@ -1,3 +1,11 @@
+// Controlling 28BYJ-48 5V stepper motor + ULN2003 driver
+// Now with microstepping! :)
+
+// Soft-PWM with LEDs: https://youtu.be/r2MwitaEKHs
+// (with delay() instead of delayMicroseconds() and longer pulse duration)
+
+// 28BYJ-48 in action: https://youtu.be/0g9wiJC0UCM
+
 const byte motorPins[4] = {
   8,  // Blue   - 28BYJ48 pin 1
   9,  // Pink   - 28BYJ48 pin 2
@@ -11,6 +19,10 @@ void setup() {
   }
 }
 
+// bit 0: pin 1
+// bit 1: pin 2
+// bit 2: pin 3
+// bit 3: pin 4
 void setMotorState(byte bitMaskState) {
   for (byte i = 0, j = 1; i < sizeof(motorPins); i++, j <<= 1) {
     digitalWrite(motorPins[i], (bitMaskState & j) ? HIGH : LOW);
@@ -27,21 +39,22 @@ const byte motorStepSequence[8] = {
   B0011,
   B0001,
   B1001
-};
+}; // half steps
 */
 
 const byte motorStepSequence[4] = {
   B1000,
   B0100,
   B0010,
-  B0001,
-};
+  B0001
+}; // full steps
 
 #define motorStopped 0
 
 #define RotateClockwise 1
 #define RotateCounterClockwise -1
 
+// Software-defined PWM
 //       _      __     ___    ____   _____
 //      | |    |  |   |   |  |    | |
 //      | |    |  |   |   |  |    | |
@@ -56,6 +69,7 @@ const byte motorStepSequence[4] = {
 
 /*
 void motorStateTransition(byte stateOld, byte stateNew) {
+  // no PWM
   setMotorState(stateNew);
   delay(oneStepDuration);
 }
