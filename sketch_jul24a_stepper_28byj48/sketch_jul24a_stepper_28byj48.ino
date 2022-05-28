@@ -7,10 +7,10 @@
 // 28BYJ-48 in action: https://youtu.be/0g9wiJC0UCM
 
 const byte motorPins[4] = {
-  8,  // Blue   - 28BYJ48 pin 1
-  9,  // Pink   - 28BYJ48 pin 2
-  10, // Yellow - 28BYJ48 pin 3
-  11  // Orange - 28BYJ48 pin 4
+  5,  // Blue   - 28BYJ48 pin 1
+  6,  // Pink   - 28BYJ48 pin 2
+  7,  // Yellow - 28BYJ48 pin 3
+  8   // Orange - 28BYJ48 pin 4
 };    // Red    - 28BYJ48 pin 5 (VCC)
 
 void setup() {
@@ -29,7 +29,6 @@ void setMotorState(byte bitMaskState) {
   }
 }
 
-/*
 const byte motorStepSequence[8] = {
   B1000,
   B1100,
@@ -40,14 +39,15 @@ const byte motorStepSequence[8] = {
   B0001,
   B1001
 }; // half steps
-*/
 
+/*
 const byte motorStepSequence[4] = {
   B1000,
   B0100,
   B0010,
   B0001
 }; // full steps
+*/
 
 #define motorStopped 0
 
@@ -60,41 +60,57 @@ const byte motorStepSequence[4] = {
 //      | |    |  |   |   |  |    | |
 // _____| |____|  |___|   |__|    |_|
 
-#define pulseWidth 300
-#define pulseDelta 10
-
-#define microstepDuration pulseWidth              // here: 300 µs
-#define microstepCount    pulseWidth / pulseDelta // here: 30
-#define oneStepDuration   microstepDuration * microstepCount
-
-/*
-void motorStateTransition(byte stateOld, byte stateNew) {
-  // no PWM
-  setMotorState(stateNew);
-  delay(oneStepDuration);
+void setMotorStateAndDelay(byte motorState, unsigned int delayDuration) {
+  setMotorState(motorState);
+  delayMicroseconds(delayDuration);
+  // delay(delayDuration); // XXX debug with LEDs
 }
-*/
+
+void motorOnePulseCycle(byte stateOld, byte stateNew, int onePulseWidth, int subPartNew) {
+  subPartNew = min(onePulseWidth, subPartNew); // sanity check
+  int subPartOld = onePulseWidth - subPartNew;
+
+  if (subPartOld > subPartNew) {
+    // old state prevail
+    if (subPartNew > 0) {
+      setMotorStateAndDelay(stateOld | stateNew, subPartNew);
+      setMotorStateAndDelay(stateOld, onePulseWidth - (subPartNew << 1));
+      setMotorStateAndDelay(stateOld & stateNew, subPartNew);
+    } else {
+      setMotorStateAndDelay(stateOld, onePulseWidth);
+    }
+  } else if (subPartOld < subPartNew) {
+    // new state prevail
+    if (subPartOld > 0) {
+      setMotorStateAndDelay(stateOld | stateNew, subPartOld);
+      setMotorStateAndDelay(stateNew, onePulseWidth - (subPartOld << 1));
+      setMotorStateAndDelay(stateOld & stateNew, subPartOld);
+    } else {
+      setMotorStateAndDelay(stateNew, onePulseWidth);
+    }
+  } else {
+    // equal
+    setMotorStateAndDelay(stateOld | stateNew, subPartOld);
+    setMotorStateAndDelay(stateOld & stateNew, subPartOld);
+  }
+}
+
+#define pulseWidth 81
+#define pulseDelta 9
 
 void motorStateTransition(byte stateOld, byte stateNew) {
-  int delayOld = pulseWidth, delayNew = 0;
-
+  int onePulseWidth = pulseWidth, subPartNew = 0, subDelta = pulseDelta;
   do {
-    if (delayOld > 0) {
-      setMotorState(stateOld);
-      delayMicroseconds(delayOld);
-      // delay(delayOld); // XXX debug with LEDs
-    }
-
-    if (delayNew > 0) {
-      setMotorState(stateNew);
-      delayMicroseconds(delayNew);
-      // delay(delayNew); // XXX debug with LEDs
-    }
-
-    delayOld -= pulseDelta;
-    delayNew += pulseDelta;
-  } while (delayOld > 0);
+    motorOnePulseCycle(stateOld, stateNew, onePulseWidth, subPartNew);
+    subPartNew += subDelta;
+  } while (subPartNew < onePulseWidth);
 }
+
+void motorStateTransitionDumb(byte stateOld, byte stateNew) {
+  setMotorStateAndDelay(stateNew, 1100); // 2.2 ms for one full step
+}
+
+byte useDumbMode = 0;
 
 void motorRotate(unsigned long int rotateSteps, signed char rotateDirection) {
   byte step = 0;
@@ -103,7 +119,11 @@ void motorRotate(unsigned long int rotateSteps, signed char rotateDirection) {
 
   for (unsigned long int i = 0; i < rotateSteps; i++) {
     stateNew = motorStepSequence[step];
-    motorStateTransition(stateOld, stateNew);
+    if (useDumbMode) {
+      motorStateTransitionDumb(stateOld, stateNew);
+    } else {
+      motorStateTransition(stateOld, stateNew);
+    }
     step = (step + rotateDirection) % sizeof(motorStepSequence);
     stateOld = stateNew;
   }
@@ -112,6 +132,15 @@ void motorRotate(unsigned long int rotateSteps, signed char rotateDirection) {
 }
 
 void loop() {
+  useDumbMode = 0;
+
+  motorRotate(4096, RotateClockwise);
+  delay(500);
+  motorRotate(4096, RotateCounterClockwise);
+  delay(500);
+
+  useDumbMode = 1;
+
   motorRotate(4096, RotateClockwise);
   delay(500);
   motorRotate(4096, RotateCounterClockwise);
