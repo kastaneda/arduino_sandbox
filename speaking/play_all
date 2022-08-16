@@ -1,0 +1,12 @@
+#!/bin/sh
+
+make
+
+for f in basic highpass afftdn anlmdn rnn_bd rnn_cb rnn_lq rnn_mp rnn_sh
+do
+  clear
+  echo $f | figlet -f small -c | lolcat
+  mplayer hello8_$f.wav
+  sleep 2
+done
+
