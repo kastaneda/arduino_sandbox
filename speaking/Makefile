@@ -41,7 +41,7 @@ hello8_anlmdn.wav: hello16.wav
 
 # https://github.com/GregorR/rnnoise-models
 
-rnn/*:
+rnn/%:
 	$(MAKE) -C rnn
 
 hello8_rnn_bd.wav: rnn/bd.rnnn hello16.wav
