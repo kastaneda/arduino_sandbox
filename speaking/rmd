@@ -1,0 +1,5 @@
+#!/bin/sh
+clear
+recordmydesktop --windowid $(xdotool getactivewindow) &
+./play_all
+killall recordmydesktop
