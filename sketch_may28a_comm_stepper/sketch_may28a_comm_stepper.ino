@@ -1,17 +1,15 @@
 
-#define motorStopped              0
+#define debug
 
-#define rotateClockwise           1
-#define rotateCounterClockwise   -1
+#define moveForward       1
+#define moveBackward     -1
+#define motorStopped      0
 
-#define cmd_outputPinHigh         129
-#define cmd_outputPinLow          130
-
-#define cmd_motorForward          193
-#define cmd_motorBackward         194
-#define cmd_setMotorDelay         196
-
-#define debug                     true
+#define cmd_outputPinHigh 129
+#define cmd_outputPinLow  130
+#define cmd_motorForward  193
+#define cmd_motorBackward 194
+#define cmd_setMotorDelay 196
 
 const byte outputPins[] = { 4, 5, 6, 7, 13 };
 
@@ -43,10 +41,12 @@ void setup() {
 
   for (byte i = 0; i < sizeof(outputPins); i++) {
     pinMode(outputPins[i], OUTPUT);
+    digitalWrite(outputPins[i], LOW);
   }
 
   for (byte i = 0; i < sizeof(motorPins); i++) {
     pinMode(motorPins[i], OUTPUT);
+    digitalWrite(motorPins[i], LOW);
   }
 }
 
@@ -57,6 +57,9 @@ void loop() {
   if (Serial.available()) {
     cmd = Serial.parseInt();
     arg1 = Serial.parseInt();
+
+    while (Serial.available())
+      Serial.read();
 
 #ifdef debug
     Serial.print("Command=");
@@ -90,13 +93,14 @@ void loop() {
 #ifdef debug
         Serial.print("Motor go ");
         if (cmd == cmd_motorForward) {
-          Serial.print("forward ");
+          Serial.print("forward");
         } else {
-          Serial.print("backward ");
+          Serial.print("backward");
         }
+        Serial.print(", steps=");
         Serial.println(arg1);
 #endif
-        motorRotate(arg1, (cmd == cmd_motorForward) ? rotateCounterClockwise : rotateClockwise);
+        motorRotate(arg1, (cmd == cmd_motorForward) ? moveForward : moveBackward);
         break;
 
       case cmd_setMotorDelay:
