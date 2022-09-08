@@ -23,7 +23,7 @@ const byte motorStepSequence[] = { B1000, B1100, B0100, B0110, B0010, B0011, B00
 #define motorStepSequenceMask 7
 
 #define motorStepDelayMax 2500    // slow and stable movement
-#define motorStepDelayMin 700     // minimum delay, maximum speed (~20 RPM)
+#define motorStepDelayMin 1000     // minimum delay, maximum speed (~20 RPM)
 #define motorStepDelayDelta 10    // how fast we go from 2500 to 700
 
 unsigned int motorStepDelay;
@@ -47,8 +47,8 @@ void motorRotate(unsigned long int rotateSteps, signed char rotateDirection) {
 
 
 void loop() {
-  motorRotate(4096, moveForward);
+  motorRotate(2048, moveForward);
   delay(500);
-  motorRotate(4096, moveBackward);
+  motorRotate(2048, moveBackward);
   delay(500);
 }
