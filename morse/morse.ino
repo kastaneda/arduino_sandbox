@@ -83,7 +83,7 @@ void playChar(char c) {
     playDitDahSequience(alphabet[c - 'a']);
   }
   if (c >= '0' && c <= '9') {
-    playDitDahSequience(alphabet[c - '0']);
+    playDitDahSequience(numbers[c - '0']);
   }
   if (c == ' ') {
     delay(delayAfterWord);
