@@ -1,4 +1,4 @@
-#define debug 1
+// #define debug 1
 
 char* alphabet[] = {
   ".-",     // A
@@ -42,7 +42,7 @@ char* numbers[] = {
   "----."   // 9
 };
 
-const unsigned int delayDit = 50;
+const unsigned int delayDit = 250;
 const unsigned int delayDah = 3 * delayDit;
 const unsigned int delayAfterBeep = delayDit;
 const unsigned int delayAfterChar = 3 * delayDit - delayAfterBeep;
