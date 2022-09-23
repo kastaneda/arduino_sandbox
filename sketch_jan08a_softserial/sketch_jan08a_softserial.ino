@@ -4,14 +4,14 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 
 void setup()  
 {
-  Serial.begin(9600);
+  Serial.begin(57600);
   Serial.write("* * * Hello UART\n");
 
   // DAMN IT DOES NOT SEND "OK" RESPONSE TO MY "AT"!
 
   mySerial.begin(9600);
-  delay(250);
-  mySerial.write("AT+NAMEArduinoBluetooth\n\r");
+  //delay(250);
+  //mySerial.write("AT+NAMEArduinoBluetooth\n\r");
   // OKsetname
 }
 
