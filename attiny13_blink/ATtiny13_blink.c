@@ -7,6 +7,6 @@ int main(void) {
 
   while (1) {
     PORTB ^= 1<<PB4;
-    _delay_ms(500);
+    _delay_ms(250);
   }
 }
