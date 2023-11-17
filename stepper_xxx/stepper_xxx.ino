@@ -1,9 +1,6 @@
-#define moveForward 1
-#define moveBackward -1
-#define motorStopped 0
-
 const byte motorPins[] = { 8, 9, 10, 11 };
 
+// https://en.wikipedia.org/wiki/Stepper_motor#Phase_current_waveforms
 // https://upload.wikimedia.org/wikipedia/commons/8/85/Drive.png
 
 ////////////////////////////////////////////////////////////////////////
@@ -85,6 +82,10 @@ const byte sequence_HalfStepDrive[] = {
 
 ////////////////////////////////////////////////////////////////////////
 
+#define moveForward 1
+#define moveBackward -1
+#define motorStopped 0
+
 // #define motorStepSequence sequence_WaveDrive
 #define motorStepSequence sequence_FullStepDrive
 // #define motorStepSequence sequence_HalfStepDrive
@@ -111,9 +112,8 @@ void motorRotate(unsigned long int rotateSteps, signed char rotateDirection) {
     setMotorState(motorStepSequence[motorStep]);
     delayMicroseconds(motorStepDelay);
   }
-  setMotorState(0);
+  setMotorState(motorStopped);
 }
-
 
 void loop() {
   motorRotate(2048, moveForward);
