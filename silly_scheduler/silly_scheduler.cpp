@@ -1,3 +1,5 @@
+#include "Arduino.h" 
+
 class PeriodicJob {
 public:
   virtual void setup() = 0;
