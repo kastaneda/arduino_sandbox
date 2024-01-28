@@ -14,12 +14,16 @@ void setup() {
   led.setup();
   motor.setup();
   dbg.setup();
+  dbg.setDelayDuration(250000);
+  pinMode(A0, INPUT);
+  analogReference(INTERNAL);
 }
 
 void loop() {
   int potReading;
 
-  potReading = analogRead(A0) >> 6 << 6;
+  potReading = analogRead(A0);
+  potReading = potReading >> 4 << 4;
   dbg.setValue(potReading);
 
   // TODO FIXME what's wrong with that potentiometer?
