@@ -1,5 +1,7 @@
 #include "Arduino.h" 
 
+////////////////////////////////////////////////////////////////////////
+
 class ShouldSetup {
 public:
   virtual void setup() = 0;
@@ -15,13 +17,17 @@ void ShouldLoop::loop() {
   this->loopWhen(micros());
 }
 
-class ButtonDebouncer: /* public ShouldSetup, */ public ShouldLoop {
+////////////////////////////////////////////////////////////////////////
+
+class ButtonDebouncer: public ShouldLoop {
 public:
   int buttonState = 0;
   unsigned long debounceDelay = 50;
+
   int (*readingSource)() = 0;
   void (*onKeyDown)() = 0;
   void (*onKeyUp)() = 0;
+
   void loopWhen(unsigned long timeNow);
 
 private:
@@ -40,10 +46,11 @@ void ButtonDebouncer::loopWhen(unsigned long timeNow) {
     if ((timeNow - this->lastDebounceTime) > this->debounceDelay) {
       if (reading != this->buttonState) {
         this->buttonState = reading;
-        if (reading && this->onKeyDown) {
+        // It's pull-up, so LOW means button is pressed, HIGH elsewhere
+        if (!reading && this->onKeyDown) {
           this->onKeyDown();
         }
-        if (!reading && this->onKeyUp) {
+        if (reading && this->onKeyUp) {
           this->onKeyUp();
         }
       }
@@ -53,29 +60,84 @@ void ButtonDebouncer::loopWhen(unsigned long timeNow) {
   }
 }
 
-int buttonReadingSource() {
-  return digitalRead(2);
+////////////////////////////////////////////////////////////////////////
+
+class DigitalReader: public ShouldSetup {
+public:
+  DigitalReader(byte pin);
+  void setup();
+  int read();
+
+private:
+  byte pin;
+};
+
+DigitalReader::DigitalReader(byte pin) {
+  this->pin = pin;
 }
 
-bool ledState = 0;
-void ledToggle() {
-  ledState = 1 - ledState;
-  digitalWrite(LED_BUILTIN, ledState);
+void DigitalReader::setup() {
+  pinMode(this->pin, INPUT_PULLUP);
 }
 
-ButtonDebouncer btn1;
+int DigitalReader::read() {
+  return digitalRead(this->pin);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+class ToggleLED: public ShouldSetup {
+public:
+  ToggleLED(byte pin);
+  void setup();
+  void toggle();
+
+private:
+  byte pin;
+  byte state = 0;
+};
+
+ToggleLED::ToggleLED(byte pin) {
+  this->pin = pin;
+}
+
+void ToggleLED::setup() {
+  pinMode(this->pin, OUTPUT);
+  digitalWrite(this->pin, LOW);
+}
+
+void ToggleLED::toggle() {
+  this->state = 1 - this->state;
+  digitalWrite(this->pin, this->state);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+DigitalReader myPin(2);
+ToggleLED myLED(LED_BUILTIN);
+ButtonDebouncer myButton;
+
+int inputLink() {
+  return myPin.read();
+}
+
+void outputLink() {
+  myLED.toggle();
+}
 
 void setup() {
-  pinMode(2, INPUT_PULLUP);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
+  myPin.setup();
+  myLED.setup();
 
-  btn1.readingSource = buttonReadingSource;
-  //btn1.onKeyUp = ledToggle;
-  btn1.onKeyDown = ledToggle;
-  //btn1.setup();
+  // TODO FIXME
+  // Can I somehow use here a class member of specific instance?
+  myButton.readingSource = inputLink;
+  myButton.onKeyDown = outputLink;
+
+  // error: cannot convert ‘ToggleLED::toggle’ from type ‘void (ToggleLED::)()’ to type ‘void (*)()’
+  // myButton.onKeyDown = myLED.toggle;
 }
 
 void loop() {
-  btn1.loop();
+  myButton.loop();
 }
