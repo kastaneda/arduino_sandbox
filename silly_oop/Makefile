@@ -1,2 +1,4 @@
-demo: demo.cpp
+all: demo pointer_fn
+
+%: %.cpp
 	g++ $< -o $@
