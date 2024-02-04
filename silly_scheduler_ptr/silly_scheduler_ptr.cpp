@@ -117,25 +117,11 @@ DigitalReader myPin(2);
 ToggleLED myLED(LED_BUILTIN);
 ButtonDebouncer myButton;
 
-int inputLink() {
-  return myPin.read();
-}
-
-void outputLink() {
-  myLED.toggle();
-}
-
 void setup() {
   myPin.setup();
   myLED.setup();
-
-  // TODO FIXME
-  // Can I somehow use here a class member of specific instance?
-  myButton.readingSource = inputLink;
-  myButton.onKeyDown = outputLink;
-
-  // error: cannot convert ‘ToggleLED::toggle’ from type ‘void (ToggleLED::)()’ to type ‘void (*)()’
-  // myButton.onKeyDown = myLED.toggle;
+  myButton.readingSource = []() { return myPin.read(); };
+  myButton.onKeyDown = []() { myLED.toggle(); };
 }
 
 void loop() {
