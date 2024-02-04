@@ -1,7 +1,7 @@
 #ifndef DebouncedToggleButton_h
 #define DebouncedToggleButton_h
-#include "Arduino.h" 
-#include "PeriodicJob.h" 
+#include "Arduino.h"
+#include "PeriodicJob.h"
 
 class DebouncedToggleButton: public PeriodicJob {
 public:
