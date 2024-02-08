@@ -19,44 +19,47 @@ void ShouldLoop::loop() {
 
 ////////////////////////////////////////////////////////////////////////
 
-class ButtonDebouncer: public ShouldLoop {
+class Debouncer: public ShouldLoop {
 public:
-  int buttonState = 0;
+  int stateDebounced = 0;
   unsigned long debounceDelay = 50;
 
   int (*readingSource)() = 0;
-  void (*onKeyDown)() = 0;
-  void (*onKeyUp)() = 0;
+//  void (*onRaise)() = 0;
+//  void (*onFall)() = 0;
+  void (*onChange)(int state) = 0;
 
   void loopWhen(unsigned long timeNow);
 
 private:
-  int lastButtonState = 0;
+  int lastReading = 0;
   unsigned long lastDebounceTime = 0;
 };
 
-void ButtonDebouncer::loopWhen(unsigned long timeNow) {
+void Debouncer::loopWhen(unsigned long timeNow) {
   if (this->readingSource) {
     int reading = this->readingSource();
     
-    if (reading != this->lastButtonState) {
+    if (reading != this->lastReading) {
       this->lastDebounceTime = timeNow;
     }
 
     if ((timeNow - this->lastDebounceTime) > this->debounceDelay) {
-      if (reading != this->buttonState) {
-        this->buttonState = reading;
-        // It's pull-up, so LOW means button is pressed, HIGH elsewhere
-        if (!reading && this->onKeyDown) {
-          this->onKeyDown();
-        }
-        if (reading && this->onKeyUp) {
-          this->onKeyUp();
+      if (reading != this->stateDebounced) {
+        this->stateDebounced = reading;
+//        if (!reading && this->onFall) {
+//          this->onFall();
+//        }
+//        if (reading && this->onRaise) {
+//          this->onRaise();
+//        }
+        if (this->onChange) {
+          this->onChange(stateDebounced);
         }
       }
     }
 
-    this->lastButtonState = reading;
+    this->lastReading = reading;
   }
 }
 
@@ -115,13 +118,13 @@ void ToggleLED::toggle() {
 
 DigitalReader myPin(2);
 ToggleLED myLED(LED_BUILTIN);
-ButtonDebouncer myButton;
+Debouncer myButton;
 
 void setup() {
   myPin.setup();
   myLED.setup();
   myButton.readingSource = []() { return myPin.read(); };
-  myButton.onKeyDown = []() { myLED.toggle(); };
+  myButton.onChange = [](int state) { if (!state) myLED.toggle(); };
 }
 
 void loop() {
