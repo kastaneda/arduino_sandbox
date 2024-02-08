@@ -65,6 +65,7 @@ void Debouncer::loopWhen(unsigned long timeNow) {
 
 ////////////////////////////////////////////////////////////////////////
 
+/*
 class DigitalReader: public ShouldSetup {
 public:
   DigitalReader(byte pin);
@@ -86,6 +87,7 @@ void DigitalReader::setup() {
 int DigitalReader::read() {
   return digitalRead(this->pin);
 }
+*/
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -116,14 +118,18 @@ void ToggleLED::toggle() {
 
 ////////////////////////////////////////////////////////////////////////
 
-DigitalReader myPin(2);
+//DigitalReader myPin(2);
 ToggleLED myLED(LED_BUILTIN);
 Debouncer myButton;
 
+const int myPin = 2;
+
 void setup() {
-  myPin.setup();
+  //myPin.setup();
+  pinMode(myPin, INPUT_PULLUP);
   myLED.setup();
-  myButton.readingSource = []() { return myPin.read(); };
+  //myButton.readingSource = []() { return myPin.read(); };
+  myButton.readingSource = []() { return digitalRead(myPin); };
   myButton.onChange = [](int state) { if (!state) myLED.toggle(); };
 }
 
