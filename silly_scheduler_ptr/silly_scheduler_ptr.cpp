@@ -9,18 +9,18 @@ public:
 
 class ShouldLoop {
 public:
-  virtual void loopWhen(unsigned long timeNow) = 0;
+  virtual void loopAt(unsigned long timeNow) = 0;
   void loop();
 };
 
 void ShouldLoop::loop() {
-  this->loopWhen(micros());
+  this->loopAt(micros());
 }
 
 class ScheduledLoop: public ShouldLoop {
 public:
   unsigned long runPeriod = 1000000;
-  void loopWhen(unsigned long timeNow);
+  void loopAt(unsigned long timeNow);
 
 protected:
   virtual void runScheduled() = 0;
@@ -29,7 +29,7 @@ private:
   unsigned long lastRun = 0;
 };
 
-void ScheduledLoop::loopWhen(unsigned long timeNow) {
+void ScheduledLoop::loopAt(unsigned long timeNow) {
   if ((timeNow - this->lastRun) >= this->runPeriod) {
     this->runScheduled();
     this->lastRun = timeNow;
@@ -48,14 +48,14 @@ public:
   void (*onFall)() = 0;
   void (*onChange)(int state) = 0;
 
-  void loopWhen(unsigned long timeNow);
+  void loopAt(unsigned long timeNow);
 
 private:
   int lastReading = 0;
   unsigned long lastDebounceTime = 0;
 };
 
-void Debouncer::loopWhen(unsigned long timeNow) {
+void Debouncer::loopAt(unsigned long timeNow) {
   if (this->readingSource) {
     int reading = this->readingSource();
 
