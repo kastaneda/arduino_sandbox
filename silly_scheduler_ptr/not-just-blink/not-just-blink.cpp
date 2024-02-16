@@ -98,19 +98,19 @@ void Debouncer::loopAt(unsigned long timeNow) {
   }
 }
 
+BlinkingLED myBlinker(LED_BUILTIN);
 const int myButtonPin = 2;
 Debouncer myButton;
-BlinkingLED myBlinker(LED_BUILTIN);
 
 void setup() {
-  pinMode(myButtonPin, INPUT_PULLUP);
   myBlinker.setup();
-  myBlinker.runPeriod = 250000;
+  myBlinker.runPeriod = 250000; // 250ms
+  pinMode(myButtonPin, INPUT_PULLUP);
   myButton.readingSource = []() { return digitalRead(myButtonPin); };
   myButton.onFall = []() { myBlinker.enabled = !myBlinker.enabled; };
 }
 
 void loop() {
-  myButton.loop();
   myBlinker.loop();
+  myButton.loop();
 }
