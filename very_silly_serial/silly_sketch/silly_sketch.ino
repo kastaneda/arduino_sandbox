@@ -15,7 +15,7 @@ char myLedControl[] = "dev/board05/led/set";
 // mosquitto_pub -h 192.168.0.82 -t dev/board05/led/set -m 1
 // mosquitto_pub -h 192.168.0.82 -t dev/board05/led/set -m 0
 
-void handleReadBuf() {
+void handleCommand() {
   unsigned int i;
   for(i = 0; myLedControl[i]; i++) {
     if (myLedControl[i] != readBuf[i]) return;
@@ -38,7 +38,7 @@ void loop() {
       readBuf[readBufCount++] = incomingChar;
     }
     if (incomingChar == '\n') {
-      handleReadBuf();
+      handleCommand();
       readBufCount = 0;
     }
   }
