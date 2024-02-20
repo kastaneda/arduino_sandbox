@@ -1,0 +1,10 @@
+#!/bin/sh
+HOST="192.168.0.82"
+SUBSCRIBE="#"
+(mosquitto_sub -h "$HOST" -t "$SUBSCRIBE" -F "%t %p") &
+while read TOPIC PAYLOAD; do
+  if [ ! -z "$TOPIC" ]; then
+    mosquitto_pub -h "$HOST" -t "$TOPIC" -m "$PAYLOAD"
+    # >&2 echo "debug: topic=$TOPIC message=$PAYLOAD"
+  fi
+done
