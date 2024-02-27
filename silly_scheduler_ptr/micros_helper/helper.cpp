@@ -20,7 +20,7 @@ void ShouldLoop::loop() {
 class ScheduledLoop: public ShouldLoop {
 public:
   unsigned long runPeriod = 1000000;
-  void loopWhen(unsigned long timeNow);
+  void loopWhen(unsigned long timeNow) override;
 
 protected:
   virtual void runScheduled() = 0;
@@ -89,6 +89,17 @@ unsigned long test1() {
 // min: 8, max: 24, avg: 9.87
 // min: 8, max: 24, avg: 9.88
 // min: 8, max: 20, avg: 9.87
+
+// class ShouldLoop
+// when I replaced "void loop();" to the "virtual void loop() final;"
+// it becomes notably slower
+
+// min: 8, max: 28, avg: 11.99
+// min: 8, max: 24, avg: 11.99
+// min: 8, max: 20, avg: 12.00
+// min: 8, max: 20, avg: 12.00
+// min: 8, max: 20, avg: 12.00
+
 unsigned long test2() {
   unsigned long t1, t2;
   t1 = micros();
@@ -121,11 +132,11 @@ void setup() {
 
 void loop() {
   unsigned long t, t_min, t_max, t_avg;
-  const unsigned long test_count = 100;
+  const unsigned long test_count = 10000;
 
   t_min = t_max = t_avg = 0;
   for (unsigned int i = 0; i < test_count; i++) {
-    t = test3();
+    t = test2();
     t_avg += t;
     if (i) {
       t_min = min(t, t_min);
