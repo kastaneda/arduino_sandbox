@@ -1,5 +1,7 @@
 #!/bin/sh
 while /bin/true; do
-  socat -d -d -v /dev/ttyUSB0,b9600 exec:./io
+  socat -d -d /dev/ttyUSB0,b9600 exec:./mqtt_io
+  #socat -d -d -d /dev/ttyUSB0,b9600 exec:./mqtt_io
+  #socat -d -d -v /dev/ttyUSB0,b9600 exec:./mqtt_io
   sleep 5
 done
