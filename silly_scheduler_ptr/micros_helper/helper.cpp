@@ -1,3 +1,6 @@
+#define SERIAL_TX_BUFFER_SIZE 128
+#define SERIAL_RX_BUFFER_SIZE 32
+
 #include "Arduino.h"
 
 ////////////////////////////////////////////////////////////////////////
@@ -180,6 +183,12 @@ unsigned long test4() {
   return t2 - t1;
 }
 
+unsigned long test5() {
+  int result = Serial.availableForWrite();
+  Serial.print('+');
+  return result;
+}
+
 void setup() {
   Serial.begin(9600);
   myBlinker.setup();
@@ -191,11 +200,11 @@ void setup() {
 
 void loop() {
   unsigned long t, t_min, t_max, t_avg;
-  const unsigned long test_count = 10000;
+  const unsigned long test_count = 100;
 
   t_min = t_max = t_avg = 0;
   for (unsigned int i = 0; i < test_count; i++) {
-    t = test4();
+    t = test5();
     t_avg += t;
     if (i) {
       t_min = min(t, t_min);
@@ -205,7 +214,10 @@ void loop() {
     }
   }
 
+  Serial.println();
   Serial.print("min: ");    Serial.print(t_min, DEC);
   Serial.print(", max: ");  Serial.print(t_max, DEC);
   Serial.print(", avg: ");  Serial.println((float) t_avg / test_count);
+
+  delay(5000);
 }
