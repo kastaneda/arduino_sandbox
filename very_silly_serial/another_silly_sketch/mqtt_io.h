@@ -22,8 +22,8 @@ public:
   void begin(Stream &s);
   void loopAt(unsigned long timeNow);
 
-  //void send(char *topic, char *payload);
-  //void send(char *topic, long *payload);
+  void send(char *topic, char *payload);
+  void send(char *topic, long payload);
 
 protected:
   Stream *io;

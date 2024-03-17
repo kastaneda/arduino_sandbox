@@ -17,7 +17,9 @@ MessageHub mqtt;
 TopicSubscription topics[] = {
   {
     "dev/board05/led/set",
-    [](char *payload) { myBlinker.enabled = (payload[0] == '1'); }
+    [](char *payload) {
+      myBlinker.enabled = (payload[0] == '1');
+    }
   }
 };
 
@@ -32,8 +34,13 @@ void setup() {
   myBlinker.runPeriod = 250000; // 250ms
 
   pinMode(myButtonPin, INPUT_PULLUP);
-  myButton.readingSource = []() { return digitalRead(myButtonPin); };
-  myButton.onFall = []() { myBlinker.enabled = !myBlinker.enabled; };
+  myButton.readingSource = []() {
+    return digitalRead(myButtonPin);
+  };
+  myButton.onFall = []() {
+    myBlinker.enabled = !myBlinker.enabled;
+    mqtt.send("dev/board05/led", myBlinker.enabled ? 1 : 0);
+  };
 }
 
 void loop() {

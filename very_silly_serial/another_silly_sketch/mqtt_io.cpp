@@ -38,3 +38,15 @@ void MessageHub::handleInboundLine() {
     }
   }
 }
+
+void MessageHub::send(char *topic, char *payload) {
+  this->io->print(topic);
+  this->io->print(' ');
+  this->io->println(payload);
+}
+
+void MessageHub::send(char *topic, long payload) {
+  this->io->print(topic);
+  this->io->print(' ');
+  this->io->println(payload);
+}
