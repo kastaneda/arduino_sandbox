@@ -9,14 +9,14 @@ class BlinkingLED: public ShouldSetup, public ScheduledLoop {
 public:
   bool enabled = true;
 
-  BlinkingLED(byte pin);
+  BlinkingLED(uint8_t pin);
   void setup();
 
 protected:
   void runScheduled();
 
 private:
-  byte pin;
+  uint8_t pin;
   bool state = false;
 };
 

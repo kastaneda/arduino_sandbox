@@ -8,23 +8,36 @@
 // TODO FIXME #include "my_stepper.h"
 
 BlinkingLED myBlinker(LED_BUILTIN);
-const int myButtonPin = 2;
+
+const uint8_t myButtonPin = 2;
 Debouncer myButton;
-MessageReader myMQTT;
+
+MessageHub mqtt;
+
+TopicSubscription topics[] = {
+  {
+    "dev/board05/led/set",
+    [](char *payload) { myBlinker.enabled = (payload[0] == '1'); }
+  }
+};
 
 void setup() {
   Serial.begin(9600);
-  myMQTT.begin();
+
+  mqtt.begin();
+  mqtt.subscriptions = topics;
+  mqtt.subscriptionsCount = sizeof(topics) / sizeof(topics[0]);
+
   myBlinker.setup();
   myBlinker.runPeriod = 250000; // 250ms
+
   pinMode(myButtonPin, INPUT_PULLUP);
   myButton.readingSource = []() { return digitalRead(myButtonPin); };
   myButton.onFall = []() { myBlinker.enabled = !myBlinker.enabled; };
-  myMQTT.FIXME_testCommand = []() { myBlinker.enabled = !myBlinker.enabled; };
 }
 
 void loop() {
   myBlinker.loop();
   myButton.loop();
-  myMQTT.loop();
+  mqtt.loop();
 }

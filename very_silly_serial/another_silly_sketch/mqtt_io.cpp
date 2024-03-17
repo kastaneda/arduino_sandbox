@@ -1,30 +1,40 @@
 #include "mqtt_io.h"
 
-void MessageQuery::begin() {
+void MessageHub::begin() {
   this->begin(Serial);
 }
 
-void MessageQuery::begin(Stream &s) {
+void MessageHub::begin(Stream &s) {
   this->io = &s;
 }
 
-void MessageReader::loopAt(unsigned long timeNow) {
-  if (this->io->available() > 0) {
-    char incomingChar = this->io->read();
+void MessageHub::loopAt(unsigned long timeNow) {
+  if (this->io->available())
+    this->handleInboundChar(this->io->read());
+}
 
-    if (this->messageBufferCount < (MessageBufferSize - 1)) {
-      this->messageBuffer[this->messageBufferCount++] = incomingChar;
-    }
+void MessageHub::handleInboundChar(char incomingChar) {
+  if (this->messageBufferCount < (MessageBufferSize - 1))
+    this->messageBuffer[this->messageBufferCount++] = incomingChar;
 
-    if (incomingChar == '\n' || incomingChar == '\r') {
-      this->messageBuffer[this->messageBufferCount + 1] = 0;
-      this->FIXME_handleCommand();
-      this->messageBufferCount = 0;
-    }
+  if (incomingChar == '\n' || incomingChar == '\r') {
+    this->messageBuffer[this->messageBufferCount + 1] = 0;
+    this->handleInboundLine();
+    this->messageBufferCount = 0;
   }
 }
 
-void MessageReader::FIXME_handleCommand() {
-  this->io->write("FIXME_testCommand()\n");
-  if (this->FIXME_testCommand) this->FIXME_testCommand();
+void MessageHub::handleInboundLine() {
+  char chTopic, chBuffer;
+  for (uint8_t i = 0; i < this->subscriptionsCount; i++) {
+    for (uint8_t j = 0; j < MessageBufferSize; j++) {
+      chTopic = this->subscriptions[i].topic[j];
+      chBuffer = this->messageBuffer[j];
+      if (chTopic == chBuffer) continue;
+      if ((chTopic == '\0') && (chBuffer == ' ')) {
+        this->subscriptions[i].onMessage(this->messageBuffer + j + 1);
+        return;
+      }
+    }
+  }
 }

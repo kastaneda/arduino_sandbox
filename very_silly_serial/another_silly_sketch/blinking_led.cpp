@@ -1,6 +1,6 @@
 #include "blinking_led.h"
 
-BlinkingLED::BlinkingLED(byte pin) {
+BlinkingLED::BlinkingLED(uint8_t pin) {
   this->pin = pin;
 }
 

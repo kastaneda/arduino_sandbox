@@ -10,10 +10,10 @@ public:
   int stateDebounced = 0;
   unsigned long debounceDelay = 50000; // 50ms
 
-  int (*readingSource)() = 0;
-  void (*onRaise)() = 0;
-  void (*onFall)() = 0;
-  void (*onChange)(int state) = 0;
+  int (*readingSource)() = NULL;
+  void (*onRaise)() = NULL;
+  void (*onFall)() = NULL;
+  void (*onChange)(int state) = NULL;
 
   void loopAt(unsigned long timeNow);
 
