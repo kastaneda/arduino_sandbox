@@ -1,7 +1,8 @@
 #!/bin/sh
 HOST="192.168.0.82"
-SUBSCRIBE="#"
-(mosquitto_sub -h "$HOST" -t "$SUBSCRIBE" -F "%t %p") &
+#SUBSCRIBE="#"
+SUBSCRIBE="dev/+/+/set"
+(mosquitto_sub -h "$HOST" -t "$SUBSCRIBE" -F "%t %p" | tee /dev/stderr) &
 while read TOPIC PAYLOAD; do
   if [ ! -z "$TOPIC" ]; then
     mosquitto_pub -h "$HOST" -t "$TOPIC" -m "$PAYLOAD"

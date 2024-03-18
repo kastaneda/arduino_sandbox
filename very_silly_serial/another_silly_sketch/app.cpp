@@ -23,6 +23,15 @@ TopicSubscription topics[] = {
   }
 };
 
+class MyAnalogReader: public ScheduledLoop {
+public:
+  uint8_t pin;
+protected:
+  void runScheduled() {
+    mqtt.send("dev/board05/A0", analogRead(this->pin));
+  }
+} myA0;
+
 void setup() {
   Serial.begin(9600);
 
@@ -41,10 +50,15 @@ void setup() {
     myBlinker.enabled = !myBlinker.enabled;
     mqtt.send("dev/board05/led", myBlinker.enabled ? 1 : 0);
   };
+
+  pinMode(A0, INPUT);
+  myA0.pin = A0;
+//  myA0.runPeriod = 250000; // 250ms
 }
 
 void loop() {
   myBlinker.loop();
   myButton.loop();
   mqtt.loop();
+  myA0.loop();
 }
