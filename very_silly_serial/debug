@@ -1,0 +1,4 @@
+#!/bin/sh
+HOST="192.168.0.82"
+SUBSCRIBE="#"
+mosquitto_sub -h "$HOST" -t "$SUBSCRIBE" -v

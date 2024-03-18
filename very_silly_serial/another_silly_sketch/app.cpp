@@ -53,7 +53,7 @@ void setup() {
 
   pinMode(A0, INPUT);
   myA0.pin = A0;
-//  myA0.runPeriod = 250000; // 250ms
+  myA0.runPeriod = 250000; // 250ms
 }
 
 void loop() {
