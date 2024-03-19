@@ -20,7 +20,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 140,
-        "y": 300,
+        "y": 180,
         "wires": [
             [
                 "73195e171b903ee2"
@@ -42,7 +42,7 @@
         "expiry": "",
         "broker": "da8600015f2fa33d",
         "x": 620,
-        "y": 280,
+        "y": 160,
         "wires": []
     },
     {
@@ -72,7 +72,7 @@
         "animate": false,
         "className": "",
         "x": 370,
-        "y": 240,
+        "y": 120,
         "wires": [
             [
                 "ad6d99f8aac25738"
@@ -85,7 +85,7 @@
         "z": "bf045e3a5d610464",
         "name": "",
         "group": "78afdf952ae3acdc",
-        "order": 0,
+        "order": 2,
         "width": 0,
         "height": 0,
         "gtype": "gage",
@@ -104,7 +104,7 @@
         "diff": false,
         "className": "",
         "x": 380,
-        "y": 340,
+        "y": 200,
         "wires": []
     },
     {
@@ -124,25 +124,54 @@
         "y": 80,
         "wires": [
             [
-                "127129f004b44dee",
-                "0cf355d9994d0a5e"
+                "127129f004b44dee"
             ]
         ]
     },
     {
-        "id": "0cf355d9994d0a5e",
-        "type": "debug",
+        "id": "f1524a6125c7c617",
+        "type": "ui_button",
         "z": "bf045e3a5d610464",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 460,
-        "y": 80,
+        "name": "",
+        "group": "78afdf952ae3acdc",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Looooong Beep",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "1",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 380,
+        "y": 280,
+        "wires": [
+            [
+                "2328fa5eaf91ec50"
+            ]
+        ]
+    },
+    {
+        "id": "2328fa5eaf91ec50",
+        "type": "mqtt out",
+        "z": "bf045e3a5d610464",
+        "name": "",
+        "topic": "dev/board05/beeper/set",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "da8600015f2fa33d",
+        "x": 630,
+        "y": 300,
         "wires": []
     },
     {
