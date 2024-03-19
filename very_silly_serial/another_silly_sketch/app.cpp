@@ -4,23 +4,31 @@
 #include "mqtt_io.h"
 #include "debouncer.h"
 #include "blinking_led.h"
+#include "beeper.h"
 // TODO FIXME #include "my_servo.h"
 // TODO FIXME #include "my_stepper.h"
 
 BlinkingLED myBlinker(LED_BUILTIN);
-
 const uint8_t myButtonPin = 2;
 Debouncer myButton;
-
+Beeper myBeeper(5);
 MessageHub mqtt;
 
 TopicSubscription topics[] = {
   {
     "dev/board05/led/set",
     [](char *payload) {
+      myBeeper.beep();
       myBlinker.enabled = (payload[0] == '1');
     }
+  },
+  {
+    "dev/board05/beeper/set",
+    [](char *payload) {
+      myBeeper.beep(500000);
+    }
   }
+
 };
 
 class MyAnalogReader: public ScheduledLoop {
@@ -28,7 +36,9 @@ public:
   uint8_t pin;
 protected:
   void runScheduled() {
-    mqtt.send("dev/board05/A0", analogRead(this->pin));
+    if (Serial.availableForWrite() > 20) {
+      mqtt.send("dev/board05/A0", analogRead(this->pin));
+    }
   }
 } myA0;
 
@@ -48,12 +58,15 @@ void setup() {
   };
   myButton.onFall = []() {
     myBlinker.enabled = !myBlinker.enabled;
+    myBeeper.beep();
     mqtt.send("dev/board05/led", myBlinker.enabled ? 1 : 0);
   };
 
   pinMode(A0, INPUT);
   myA0.pin = A0;
-  myA0.runPeriod = 250000; // 250ms
+  myA0.runPeriod = 150000; // 150ms
+
+  myBeeper.setup();
 }
 
 void loop() {
@@ -61,4 +74,5 @@ void loop() {
   myButton.loop();
   mqtt.loop();
   myA0.loop();
+  myBeeper.loop();
 }
