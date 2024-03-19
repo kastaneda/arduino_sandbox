@@ -2,11 +2,10 @@
 HOST="192.168.0.82"
 #SUBSCRIBE="#"
 SUBSCRIBE="dev/+/+/set"
-(mosquitto_sub -h "$HOST" -t "$SUBSCRIBE" -F "%t %p") &
-#(mosquitto_sub -h "$HOST" -t "$SUBSCRIBE" -F "%t %p" | tee /dev/stderr) &
+(mosquitto_sub -h "$HOST" -t "$SUBSCRIBE" -F "%t %p" | tee /dev/stderr) &
 while read TOPIC PAYLOAD; do
   if [ ! -z "$TOPIC" ]; then
     mosquitto_pub -h "$HOST" -t "$TOPIC" -m "$PAYLOAD"
-    #echo "debug: topic=\033[32m$TOPIC\033[0m message=\033[36m$PAYLOAD\033[0m" >&2
+    echo "debug: topic=\033[32m$TOPIC\033[0m message=\033[36m$PAYLOAD\033[0m" >&2
   fi
 done

@@ -1,8 +1,6 @@
 #!/bin/sh
 while /bin/true; do
-  #socat -d -d /dev/ttyUSB0,b9600 exec:./mqtt_io
-  #socat -d -d -d /dev/ttyUSB0,b9600 exec:./mqtt_io
-  socat -v /dev/ttyUSB0,b9600 exec:./mqtt_io
+  socat -d -d file:/dev/ttyUSB0,nonblock,cs8,b9600,cstopb=0,raw,echo=0 exec:./mqtt_io
   pkill -A -s 0
   sleep 5
 done
