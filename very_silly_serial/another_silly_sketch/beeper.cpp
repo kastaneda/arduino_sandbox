@@ -10,7 +10,7 @@ void Beeper::setup() {
 }
 
 void Beeper::beep() {
-  this->beep(100000); // 100ms
+  this->beep(75000); // 75ms
 }
 
 void Beeper::beep(unsigned long duration) {

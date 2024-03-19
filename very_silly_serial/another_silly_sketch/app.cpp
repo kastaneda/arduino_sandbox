@@ -25,10 +25,16 @@ TopicSubscription topics[] = {
   {
     "dev/board05/beeper/set",
     [](char *payload) {
-      myBeeper.beep(500000);
+      unsigned long duration = 0;
+      uint8_t i = 0;
+      while (payload[i]) {
+        if ((payload[i] >= '0') && (payload[i] <= '9'))
+          duration = duration * 10 + (payload[i] - '0');
+        i++;
+      }
+      myBeeper.beep(duration);
     }
   }
-
 };
 
 class MyAnalogReader: public ScheduledLoop {
