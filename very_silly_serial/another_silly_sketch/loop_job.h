@@ -21,8 +21,6 @@ public:
 
 protected:
   virtual void runScheduled() = 0;
-
-private:
   unsigned long lastRun = 0;
 };
 
