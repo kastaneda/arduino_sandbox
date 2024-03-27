@@ -41,12 +41,17 @@ void MQTT_handleInboundLine() {
     for (int j = 0; j < MQTT_MessageBufferSize; j++) {
       chTopic = MQTT_subscriptions[i].topic[j];
       chBuffer = MQTT_messageBuffer[j];
-      if (chTopic == chBuffer) continue;
+      if (chTopic == chBuffer) {
+        //printf("debug: chTopic=%c equals chBuffer=%c\n", chTopic, chBuffer);
+        continue;
+      }
+      //printf("debug: chTopic=%d NOT equals chBuffer=%d\n", chTopic, chBuffer);
       if ((chTopic == '\0') && (chBuffer == ' ')) {
         printf("debug: i=%d\n", i);
-        // MQTT_subscriptions[i].onMessage(MQTT_messageBuffer + j + 1);
+        MQTT_subscriptions[i].onMessage(MQTT_messageBuffer + j + 1);
         return;
       }
+      j = MQTT_MessageBufferSize;
     }
   }
 }

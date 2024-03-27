@@ -37,6 +37,7 @@ void MessageHub::handleInboundLine() {
         this->subscriptions[i].onMessage(this->messageBuffer + j + 1);
         return;
       }
+      j = MessageBufferSize;
     }
   }
 }

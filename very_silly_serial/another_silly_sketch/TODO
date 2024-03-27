@@ -1,10 +1,4 @@
 
-Bugs
-
- - LEDs 12 and 13 are totally screwed up!
-   Check MQTT topic matching and everything other
-
-
 New features
 
  - There shall be only one MQTT hub
