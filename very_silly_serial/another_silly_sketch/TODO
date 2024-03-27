@@ -1,0 +1,31 @@
+
+Bugs
+
+ - LEDs 12 and 13 are totally screwed up!
+   Check MQTT topic matching and everything other
+
+
+New features
+
+ - There shall be only one MQTT hub
+    - move core functionality to functions
+    - well, there might be small helper class for void loop()
+    - implement the parseInt() after all
+
+ - MQTT async output query
+    - publish(char *topic, long value, bool replace)
+        - send only when not blocking, check Serial.availableForWrite()
+        - replace flag: drop previous message with the same topic
+
+ - Telemetry reader
+    - configurable topic, scheduler and input callback
+    - use MQTT async output query
+    - read input periodically (say every 100 ms)
+        - if does not match previous, send to MQTT
+        - if match, send it every 5 seconds or so
+
+ - after all, do the Servo class
+    - use Servo library
+    - inputs in PWM microseconds
+    - on new value: attach, wait 500 ms, detach
+

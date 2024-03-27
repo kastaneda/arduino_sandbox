@@ -8,7 +8,8 @@
 // TODO FIXME #include "my_servo.h"
 #include "my_stepper.h"
 
-BlinkingLED myBlinker(LED_BUILTIN);
+BlinkingLED myBlinker12(12);
+BlinkingLED myBlinker13(13); // LED_BUILTIN
 const uint8_t myButtonPin = 2;
 Debouncer myButton;
 Beeper myBeeper(5);
@@ -17,10 +18,17 @@ MessageHub mqtt;
 
 TopicSubscription topics[] = {
   {
-    "dev/board05/led/set",
+    "dev/board05/led12/set",
     [](char *payload) {
       myBeeper.beep();
-      myBlinker.enabled = (payload[0] == '1');
+      myBlinker12.enabled = (payload[0] == '1');
+    }
+  },
+  {
+    "dev/board05/led13/set",
+    [](char *payload) {
+      myBeeper.beep();
+      myBlinker13.enabled = (payload[0] == '1');
     }
   },
   {
@@ -88,32 +96,36 @@ void setup() {
   mqtt.subscriptions = topics;
   mqtt.subscriptionsCount = sizeof(topics) / sizeof(topics[0]);
 
-  myBlinker.setup();
-  myBlinker.runPeriod = 250000; // 250ms
+  myBlinker12.setup();
+  myBlinker12.runPeriod = 333333; // 333ms hehehe
+
+  myBlinker13.setup();
+  myBlinker13.runPeriod = 250000; // 250ms
 
   pinMode(myButtonPin, INPUT_PULLUP);
   myButton.readingSource = []() {
     return digitalRead(myButtonPin);
   };
   myButton.onFall = []() {
-    myBlinker.enabled = !myBlinker.enabled;
+    myBlinker12.enabled = !myBlinker12.enabled;
     myBeeper.beep();
-    mqtt.send("dev/board05/led", myBlinker.enabled ? 1 : 0);
+    mqtt.send("dev/board05/led12", myBlinker12.enabled ? 1 : 0);
   };
 
   pinMode(A0, INPUT);
-  //analogReference(INTERNAL);
+  //analogReference(INTERNAL); // on USB it makes only worse
   myA0.pin = A0;
-  myA0.runPeriod = 350000; // 350ms
+  myA0.runPeriod = 400000; // 400ms
 
   myBeeper.setup();
 
   myStepper.setup();
-  myStepperTelemetry.runPeriod = 100000; // 100ms
+  myStepperTelemetry.runPeriod = 150000; // 150ms
 }
 
 void loop() {
-  myBlinker.loop();
+  myBlinker13.loop();
+  myBlinker12.loop();
   myButton.loop();
   mqtt.loop();
   myA0.loop();
