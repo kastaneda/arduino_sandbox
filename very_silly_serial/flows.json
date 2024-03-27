@@ -1,0 +1,605 @@
+[
+    {
+        "id": "ade07990eec8e5b8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d1133fe3b2fbf616",
+        "type": "ui_tab",
+        "name": "Arduino playground",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "e5c29ae12b924727",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "3c4065ec7b4df9ae",
+        "type": "ui_group",
+        "name": "LEDs, pot and buzzer",
+        "tab": "d1133fe3b2fbf616",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1d411a2b3f337a0d",
+        "type": "ui_group",
+        "name": "Stepper & servo motors",
+        "tab": "d1133fe3b2fbf616",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "2f7156f75d22ed64",
+        "type": "ui_spacer",
+        "z": "ade07990eec8e5b8",
+        "name": "spacer",
+        "group": "1d411a2b3f337a0d",
+        "order": 3,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "1218ea9da09517eb",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.0.82",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "2d17d81e48c18efb",
+        "type": "ui_switch",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "label": "Built-in LED",
+        "tooltip": "",
+        "group": "3c4065ec7b4df9ae",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "ffebce2dd060f1a2"
+            ]
+        ]
+    },
+    {
+        "id": "384973d575905695",
+        "type": "ui_switch",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "label": "LED on pin 12",
+        "tooltip": "",
+        "group": "3c4065ec7b4df9ae",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 380,
+        "y": 160,
+        "wires": [
+            [
+                "d9a0e89eaabdbb56"
+            ]
+        ]
+    },
+    {
+        "id": "5038f2e20f9678fb",
+        "type": "ui_gauge",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "group": "3c4065ec7b4df9ae",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "analogRead(A0)",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1023",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 380,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "d931ee22418c5355",
+        "type": "ui_button",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "group": "3c4065ec7b4df9ae",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Beep",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "200000",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 350,
+        "y": 280,
+        "wires": [
+            [
+                "0c2a1a1284c177fb"
+            ]
+        ]
+    },
+    {
+        "id": "3ff83dc04d14bbfc",
+        "type": "ui_button",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "group": "3c4065ec7b4df9ae",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Beeeeeeep",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "750000",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [
+                "0c2a1a1284c177fb"
+            ]
+        ]
+    },
+    {
+        "id": "407c4248fbb4370a",
+        "type": "ui_template",
+        "z": "ade07990eec8e5b8",
+        "group": "3c4065ec7b4df9ae",
+        "name": "CSS",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    /**\n     * Add to settings.js Server Settings section:\n     * httpStatic: '/data/static/'\n     */\n    body {\n        background: url('/bg.jpg') no-repeat center center fixed !important;\n        background-size: cover !important;\n    }    \n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "",
+        "x": 350,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fc520e4a25e3a0e6",
+        "type": "ui_slider",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "label": "Stepper target",
+        "tooltip": "",
+        "group": "1d411a2b3f337a0d",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "4095",
+        "step": 1,
+        "className": "",
+        "x": 380,
+        "y": 400,
+        "wires": [
+            [
+                "b70c9b0d1feb09b1"
+            ]
+        ]
+    },
+    {
+        "id": "6cf92e58f6b6f0d5",
+        "type": "ui_slider",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "label": "Stepper actual",
+        "tooltip": "",
+        "group": "1d411a2b3f337a0d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "4095",
+        "step": 1,
+        "className": "",
+        "x": 380,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9b3fd6796b688ed6",
+        "type": "ui_slider",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "label": "Servo",
+        "tooltip": "",
+        "group": "1d411a2b3f337a0d",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "1000",
+        "max": "2000",
+        "step": 1,
+        "className": "",
+        "x": 350,
+        "y": 500,
+        "wires": [
+            [
+                "fe983168f99dc37c"
+            ]
+        ]
+    },
+    {
+        "id": "1f4bdbca520e0615",
+        "type": "mqtt in",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/led13",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1218ea9da09517eb",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [
+                "2d17d81e48c18efb"
+            ]
+        ]
+    },
+    {
+        "id": "ffebce2dd060f1a2",
+        "type": "mqtt out",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/led13/set",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1218ea9da09517eb",
+        "x": 630,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2b6c0a426f3e8390",
+        "type": "mqtt in",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/led12",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1218ea9da09517eb",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "384973d575905695"
+            ]
+        ]
+    },
+    {
+        "id": "d9a0e89eaabdbb56",
+        "type": "mqtt out",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/led12/set",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1218ea9da09517eb",
+        "x": 630,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "de86d278444a4351",
+        "type": "mqtt in",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/A0",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1218ea9da09517eb",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 220,
+        "wires": [
+            [
+                "5038f2e20f9678fb"
+            ]
+        ]
+    },
+    {
+        "id": "0c2a1a1284c177fb",
+        "type": "mqtt out",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/beep/set",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1218ea9da09517eb",
+        "x": 630,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "b70c9b0d1feb09b1",
+        "type": "mqtt out",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/stepper/set",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1218ea9da09517eb",
+        "x": 630,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "fe983168f99dc37c",
+        "type": "mqtt out",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/servo/set",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1218ea9da09517eb",
+        "x": 630,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "2ed139351ddfbb4f",
+        "type": "mqtt in",
+        "z": "ade07990eec8e5b8",
+        "name": "",
+        "topic": "dev/board05/stepper",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1218ea9da09517eb",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 440,
+        "wires": [
+            [
+                "6cf92e58f6b6f0d5"
+            ]
+        ]
+    }
+]
