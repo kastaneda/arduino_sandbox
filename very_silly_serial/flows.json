@@ -127,7 +127,7 @@
     {
         "id": "1d411a2b3f337a0d",
         "type": "ui_group",
-        "name": "Stepper & servo motors",
+        "name": "Stepper and servo motors",
         "tab": "d1133fe3b2fbf616",
         "order": 2,
         "disp": true,
@@ -337,7 +337,7 @@
         "order": 1,
         "width": 0,
         "height": 0,
-        "format": "<style>\n    /**\n     * Add to settings.js Server Settings section:\n     * httpStatic: '/data/static/'\n     */\n    body {\n        background: url('/bg.jpg') no-repeat center center fixed !important;\n        background-size: cover !important;\n    }    \n</style>",
+        "format": "<style>\n    /**\n     * Add to settings.js Server Settings section:\n     * httpStatic: '/data/static/'\n     */\n    body {\n        background: url('/bg.jpg') no-repeat center center fixed !important;\n        background-size: cover !important;\n    }\n\n    /**\n     * https://discourse.nodered.org/t/how-can-i-allineate-sliders/51238\n     */\n    #Arduino_playground_Stepper_and_servo_motors_cards\n    .nr-dashboard-slider p.label {\n        width: 38%;\n        max-width: 38%;\n        min-width: 38%;\n        overflow: hidden;\n    }\n</style>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
