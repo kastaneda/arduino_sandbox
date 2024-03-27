@@ -32,6 +32,8 @@ void MessageHub::handleInboundLine() {
       chBuffer = this->messageBuffer[j];
       if (chTopic == chBuffer) continue;
       if ((chTopic == '\0') && (chBuffer == ' ')) {
+        Serial.print("debug ");
+        Serial.println(i);
         this->subscriptions[i].onMessage(this->messageBuffer + j + 1);
         return;
       }
