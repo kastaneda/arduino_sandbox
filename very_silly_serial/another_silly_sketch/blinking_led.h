@@ -5,7 +5,7 @@
 
 #include "loop_job.h"
 
-class BlinkingLED: public ShouldSetup, public ScheduledLoop {
+class BlinkingLED: /*public ShouldSetup,*/ public ScheduledLoop {
 public:
   bool enabled = true;
 

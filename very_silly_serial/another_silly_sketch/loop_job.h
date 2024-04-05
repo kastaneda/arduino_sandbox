@@ -3,10 +3,12 @@
 
 #include <Arduino.h>
 
+/*
 class ShouldSetup {
 public:
   virtual void setup() = 0;
 };
+*/
 
 class ShouldLoop {
 public:

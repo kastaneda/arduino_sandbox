@@ -5,7 +5,7 @@
 
 #include "loop_job.h"
 
-class Beeper: public ShouldSetup, public ShouldLoop {
+class Beeper: /*public ShouldSetup,*/ public ShouldLoop {
 public:
   bool enabled = true;
 
