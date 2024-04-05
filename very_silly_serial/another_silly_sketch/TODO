@@ -17,9 +17,3 @@ New features
     - read input periodically (say every 100 ms)
         - if does not match previous, send to MQTT
         - if match, send it every 5 seconds or so
-
- - after all, do the Servo class
-    - use Servo library
-    - inputs in PWM microseconds
-    - on new value: attach, wait 500 ms, detach
-

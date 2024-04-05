@@ -5,7 +5,7 @@
 #include "debouncer.h"
 #include "blinking_led.h"
 #include "beeper.h"
-// TODO FIXME #include "my_servo.h"
+#include "my_servo.h"
 #include "my_stepper.h"
 
 BlinkingLED myBlinker12, myBlinker13;
@@ -13,6 +13,8 @@ const uint8_t myButtonPin = 2;
 Debouncer myButton;
 Beeper myBeeper;
 MyStepper myStepper;
+MyServo myServo;
+
 MessageHub mqtt;
 
 TopicSubscription topics[] = {
@@ -60,6 +62,19 @@ TopicSubscription topics[] = {
         i++;
       }
       myBeeper.beep(duration);
+    }
+  },
+  {
+    "dev/board05/servo/set",
+    [](char *payload) {
+      int angle = 0;
+      uint8_t i = 0;
+      while (payload[i]) {
+        if ((payload[i] >= '0') && (payload[i] <= '9'))
+          angle = angle * 10 + (payload[i] - '0');
+        i++;
+      }
+      myServo.write(angle);
     }
   }
 };
@@ -121,6 +136,8 @@ void setup() {
   myStepper.setup(8, 9, 10, 11);
 
   myStepperTelemetry.runPeriod = 150000; // 150ms
+
+  myServo.setup(7);
 }
 
 void loop() {
@@ -132,4 +149,5 @@ void loop() {
   myBeeper.loop();
   myStepper.loop();
   myStepperTelemetry.loop();
+  myServo.loop();
 }
