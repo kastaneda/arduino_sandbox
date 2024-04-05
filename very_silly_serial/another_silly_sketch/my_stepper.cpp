@@ -1,16 +1,5 @@
 #include "my_stepper.h"
 
-MyStepper::MyStepper(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3) {
-  this->pin[0] = pin0;
-  this->pin[1] = pin1;
-  this->pin[2] = pin2;
-  this->pin[3] = pin3;
-  this->currentStep = 0;
-  this->targetStep = 0;
-  this->runPeriod = 7500; // 7.5 ms per step
-  this->lastRun = micros();
-}
-
 void MyStepper::setTargetStep(long step) {
   this->targetStep = step;
 }
@@ -29,7 +18,15 @@ void MyStepper::setMotorState(uint8_t bitMaskState) {
   }
 }
 
-void MyStepper::setup() {
+void MyStepper::setup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3) {
+  this->pin[0] = pin0;
+  this->pin[1] = pin1;
+  this->pin[2] = pin2;
+  this->pin[3] = pin3;
+  this->currentStep = 0;
+  this->targetStep = 0;
+  this->runPeriod = 7500; // 7.5 ms per step
+  this->lastRun = micros();
   for (uint8_t i = 0; i < sizeof(this->pin); i++) {
     pinMode(this->pin[i], OUTPUT);
     digitalWrite(this->pin[i], LOW);

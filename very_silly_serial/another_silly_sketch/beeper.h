@@ -8,9 +8,7 @@
 class Beeper: /*public ShouldSetup,*/ public ShouldLoop {
 public:
   bool enabled = true;
-
-  Beeper(uint8_t pin);
-  void setup();
+  void setup(uint8_t pin);
   void loopAt(unsigned long timeNow);
   void beep();
   void beep(unsigned long duration);

@@ -1,10 +1,7 @@
 #include "blinking_led.h"
 
-BlinkingLED::BlinkingLED(uint8_t pin) {
+void BlinkingLED::setup(uint8_t pin) {
   this->pin = pin;
-}
-
-void BlinkingLED::setup() {
   pinMode(this->pin, OUTPUT);
   digitalWrite(this->pin, LOW);
 }

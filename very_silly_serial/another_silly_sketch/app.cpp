@@ -8,12 +8,11 @@
 // TODO FIXME #include "my_servo.h"
 #include "my_stepper.h"
 
-BlinkingLED myBlinker12(12);
-BlinkingLED myBlinker13(13); // LED_BUILTIN
+BlinkingLED myBlinker12, myBlinker13;
 const uint8_t myButtonPin = 2;
 Debouncer myButton;
-Beeper myBeeper(5);
-MyStepper myStepper(8, 9, 10, 11);
+Beeper myBeeper;
+MyStepper myStepper;
 MessageHub mqtt;
 
 TopicSubscription topics[] = {
@@ -96,10 +95,10 @@ void setup() {
   mqtt.subscriptions = topics;
   mqtt.subscriptionsCount = sizeof(topics) / sizeof(topics[0]);
 
-  myBlinker12.setup();
+  myBlinker12.setup(12);
   myBlinker12.runPeriod = 333333; // 333ms hehehe
 
-  myBlinker13.setup();
+  myBlinker13.setup(13);
   myBlinker13.runPeriod = 250000; // 250ms
 
   pinMode(myButtonPin, INPUT_PULLUP);
@@ -117,9 +116,10 @@ void setup() {
   myA0.pin = A0;
   myA0.runPeriod = 400000; // 400ms
 
-  myBeeper.setup();
+  myBeeper.setup(5);
 
-  myStepper.setup();
+  myStepper.setup(8, 9, 10, 11);
+
   myStepperTelemetry.runPeriod = 150000; // 150ms
 }
 

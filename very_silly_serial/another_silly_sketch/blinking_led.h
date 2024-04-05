@@ -5,12 +5,10 @@
 
 #include "loop_job.h"
 
-class BlinkingLED: /*public ShouldSetup,*/ public ScheduledLoop {
+class BlinkingLED: public ScheduledLoop {
 public:
   bool enabled = true;
-
-  BlinkingLED(uint8_t pin);
-  void setup();
+  void setup(uint8_t pin);
 
 protected:
   void runScheduled();

@@ -1,10 +1,7 @@
 #include "beeper.h"
 
-Beeper::Beeper(uint8_t pin) {
+void Beeper::setup(uint8_t pin) {
   this->pin = pin;
-}
-
-void Beeper::setup() {
   pinMode(this->pin, OUTPUT);
   digitalWrite(this->pin, LOW);
 }
