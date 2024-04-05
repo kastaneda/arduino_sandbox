@@ -12,9 +12,6 @@ public:
   void beep();
   void beep(unsigned long duration);
 
-protected:
-  void runScheduled();
-
 private:
   uint8_t pin;
   bool active = false;
