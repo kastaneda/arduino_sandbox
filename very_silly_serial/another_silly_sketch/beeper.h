@@ -5,9 +5,8 @@
 
 #include "loop_job.h"
 
-class Beeper: /*public ShouldSetup,*/ public ShouldLoop {
+class Beeper: public ShouldLoop {
 public:
-  bool enabled = true;
   void setup(uint8_t pin);
   void loopAt(unsigned long timeNow);
   void beep();
