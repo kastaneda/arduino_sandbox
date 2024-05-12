@@ -5,6 +5,9 @@ New features
     - move core functionality to functions
     - well, there might be small helper class for void loop()
     - implement the parseInt() after all
+    ---------------------------------------------------------------
+    no no no no no
+    class like MessageHub + define global variable MQTT
 
  - MQTT async output query
     - publish(char *topic, long value, bool replace)
