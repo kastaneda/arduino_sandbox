@@ -2,6 +2,7 @@
 
 #include "void_loop.h"
 #include "mqtt.h"
+#include "telemetry.h"
 #include "debouncer.h"
 #include "blinking_led.h"
 #include "beeper.h"
@@ -15,8 +16,9 @@ Debouncer myButton;
 Beeper myBeeper;
 StepperLoop myStepper;
 ServoLoop myServo;
+TelemetryReporter myA0, myStepperTelemetry;
 
-MessageQuerySubscription topics[] = {
+MessageQuerySubscription myTopics[] = {
   {
     "dev/board05/led12/set",
     [](char *payload) {
@@ -52,35 +54,11 @@ MessageQuerySubscription topics[] = {
   }
 };
 
-class MyAnalogReader: public ScheduledLoop {
-public:
-  uint8_t pin;
-protected:
-  void runScheduled() {
-    if (Serial.availableForWrite() > 20) {
-      MQTT.send("dev/board05/A0", (long) analogRead(this->pin));
-    }
-  }
-} myA0;
-
-class MyStepperReporter: public ScheduledLoop {
-protected:
-  long prevReporting = -1;
-  void runScheduled() {
-    long reporting;
-    reporting = myStepper.getCurrentStep();
-    if (reporting != this->prevReporting) {
-      this->prevReporting = reporting;
-      MQTT.send("dev/board05/stepper", reporting);
-    }
-  }
-} myStepperTelemetry;
-
 void setup() {
   Serial.begin(9600);
 
   MQTT.begin();
-  MessageQuerySubscribe(MQTT, topics);
+  MessageQuerySubscribe(MQTT, myTopics);
 
   myBlinker12.setup(12);
   myBlinker12.runPeriod = 333333; // 333ms hehehe
@@ -95,19 +73,24 @@ void setup() {
   myButton.onFall = []() {
     myBlinker12.enabled = !myBlinker12.enabled;
     myBeeper.beep();
-    MQTT.send("dev/board05/led12", myBlinker12.enabled ? 1 : 0);
+    MQTT.send("dev/board05/led12", (long) (myBlinker12.enabled ? 1 : 0));
   };
 
   pinMode(A0, INPUT);
   //analogReference(INTERNAL); // on USB it makes only worse
-  myA0.pin = A0;
-  myA0.runPeriod = 400000; // 400ms
+  myA0.setup(&MQTT, "dev/board05/A0", 400000);
+  myA0.readingSource = []() {
+    return (long) analogRead(A0);
+  };
 
   myBeeper.setup(5);
 
   myStepper.setup(8, 9, 10, 11);
 
-  myStepperTelemetry.runPeriod = 150000; // 150ms
+  myStepperTelemetry.setup(&MQTT, "dev/board05/stepper", 150000);
+  myStepperTelemetry.readingSource = []() {
+    return myStepper.getCurrentStep();
+  };
 
   myServo.setup(7);
 }

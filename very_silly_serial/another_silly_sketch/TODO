@@ -1,22 +1,22 @@
 
 New features
 
- - There shall be only one MQTT hub
-    - move core functionality to functions
-    - well, there might be small helper class for void loop()
-    - implement the parseInt() after all
-    ---------------------------------------------------------------
-    no no no no no
-    class like MessageHub + define global variable MQTT
-
  - MQTT async output query
     - publish(char *topic, long value, bool replace)
         - send only when not blocking, check Serial.availableForWrite()
         - replace flag: drop previous message with the same topic
 
  - Telemetry reader
-    - configurable topic, scheduler and input callback
     - use MQTT async output query
     - read input periodically (say every 100 ms)
         - if does not match previous, send to MQTT
         - if match, send it every 5 seconds or so
+
+------------------------------------------------------------------------
+
+FIXME
+mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m 0
+mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m 1
+mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m ''
+
+Hmmmmm

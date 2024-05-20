@@ -32,7 +32,8 @@ void MessageQueryHub::handleInboundLine() {
       chBuffer = this->messageBuffer[j];
       if (chTopic == chBuffer) continue;
       if ((chTopic == '\0') && (chBuffer == ' ')) {
-        this->subscriptions[i].onMessage(this->messageBuffer + j + 1);
+        this->payload = this->messageBuffer + j + 1;
+        this->subscriptions[i].onMessage(this->payload);
         return;
       }
       j = MessageQueryBufferSize;
@@ -57,16 +58,17 @@ long MessageQueryHub::parseInt() {
 }
 
 bool MessageQueryHub::parseBool() {
+  // TODO: 'true', 'false', 'on', 'off'
   return (bool) this->parseInt();
 }
 
-void MessageQueryHub::send(char *topic, char *payload) {
+void MessageQueryHub::send(const char *topic, char *payload) {
   this->io->print(topic);
   this->io->print(' ');
   this->io->println(payload);
 }
 
-void MessageQueryHub::send(char *topic, long payload) {
+void MessageQueryHub::send(const char *topic, long payload) {
   this->io->print(topic);
   this->io->print(' ');
   this->io->println(payload);

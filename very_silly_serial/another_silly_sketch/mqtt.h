@@ -25,8 +25,8 @@ public:
 
   long parseInt();
   bool parseBool();
-  void send(char *topic, char *payload);
-  void send(char *topic, long payload);
+  void send(const char *topic, char *payload);
+  void send(const char *topic, long payload);
 
 protected:
   Stream *io;
@@ -39,23 +39,11 @@ private:
   void handleInboundLine();
 };
 
+// TODO: send / sendNow, output message buffer
+// if (Serial.availableForWrite() > msgSize) { ... }
+
 #define MessageQuerySubscribe(Hub, Topics) \
     Hub.subscriptions = Topics; \
     Hub.subscriptionsCount = sizeof(Topics) / sizeof(Topics[0]);
-
-/*
-class TelemetryReader: public ScheduledLoop {
-public:
-  unsigned long runPeriod = 250000; // default: 250ms
-  unsigned long repeatUnchanged = 5000000; // default: 5s
-  long (*readingSource)() = NULL;
-
-protected:
-  void runScheduled();
-
-private:
-  long lastReading = 0;
-};
-*/
 
 #endif
