@@ -12,7 +12,7 @@ public:
   const char *topic;
   long (*readingSource)() = NULL;
 
-  void setup(MessageQueryHub *MQ1, const char *topic1, long runPeriod1);
+  void setup(MessageQueryHub *MQ, const char *topic, long runPeriod);
 
 protected:
   long lastReading = 0;

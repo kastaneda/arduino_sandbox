@@ -1,9 +1,9 @@
 #include "telemetry.h"
 
-void TelemetryReporter::setup(MessageQueryHub *MQ1, const char *topic1, long runPeriod1) {
-  this->MQ = MQ1;
-  this->topic = topic1;
-  this->runPeriod = runPeriod1;
+void TelemetryReporter::setup(MessageQueryHub *MQ, const char *topic, long runPeriod) {
+  this->MQ = MQ;
+  this->topic = topic;
+  this->runPeriod = runPeriod;
 }
 
 void TelemetryReporter::runScheduled() {
