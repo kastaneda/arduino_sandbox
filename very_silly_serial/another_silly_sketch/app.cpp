@@ -1,13 +1,14 @@
 #include <Arduino.h>
 
 #include "void_loop.h"
-#include "mqtt_io.h"
+#include "mqtt.h"
 #include "debouncer.h"
 #include "blinking_led.h"
 #include "beeper.h"
 #include "servo_loop.h"
 #include "stepper_loop.h"
 
+MessageQueryHub MQTT;
 BlinkingLED myBlinker12, myBlinker13;
 const uint8_t myButtonPin = 2;
 Debouncer myButton;
@@ -15,66 +16,38 @@ Beeper myBeeper;
 StepperLoop myStepper;
 ServoLoop myServo;
 
-MessageHub mqtt;
-
-TopicSubscription topics[] = {
+MessageQuerySubscription topics[] = {
   {
     "dev/board05/led12/set",
     [](char *payload) {
       myBeeper.beep();
-      myBlinker12.enabled = (payload[0] == '1');
+      myBlinker12.enabled = MQTT.parseBool();
     }
   },
   {
     "dev/board05/led13/set",
     [](char *payload) {
       myBeeper.beep();
-      myBlinker13.enabled = (payload[0] == '1');
+      myBlinker13.enabled = MQTT.parseBool();
     }
   },
   {
     "dev/board05/stepper/set",
     [](char *payload) {
-      long target = 0;
-      uint8_t sign = 1;
-      uint8_t i = 0;
-      if (payload[i] == '-') {
-        sign = -1;
-        i++;
-      }
-      while (payload[i]) {
-        if ((payload[i] >= '0') && (payload[i] <= '9'))
-          target = target * 10 + (payload[i] - '0');
-        i++;
-      }
-      myStepper.setTargetStep(target * sign);
+      myStepper.setTargetStep(MQTT.parseInt());
       myBeeper.beep(10000);
     }
   },
   {
     "dev/board05/beeper/set",
     [](char *payload) {
-      unsigned long duration = 0;
-      uint8_t i = 0;
-      while (payload[i]) {
-        if ((payload[i] >= '0') && (payload[i] <= '9'))
-          duration = duration * 10 + (payload[i] - '0');
-        i++;
-      }
-      myBeeper.beep(duration);
+      myBeeper.beep(MQTT.parseInt());
     }
   },
   {
     "dev/board05/servo/set",
     [](char *payload) {
-      int angle = 0;
-      uint8_t i = 0;
-      while (payload[i]) {
-        if ((payload[i] >= '0') && (payload[i] <= '9'))
-          angle = angle * 10 + (payload[i] - '0');
-        i++;
-      }
-      myServo.write(angle);
+      myServo.write(MQTT.parseInt());
     }
   }
 };
@@ -85,7 +58,7 @@ public:
 protected:
   void runScheduled() {
     if (Serial.availableForWrite() > 20) {
-      mqtt.send("dev/board05/A0", analogRead(this->pin));
+      MQTT.send("dev/board05/A0", (long) analogRead(this->pin));
     }
   }
 } myA0;
@@ -98,7 +71,7 @@ protected:
     reporting = myStepper.getCurrentStep();
     if (reporting != this->prevReporting) {
       this->prevReporting = reporting;
-      mqtt.send("dev/board05/stepper", reporting);
+      MQTT.send("dev/board05/stepper", reporting);
     }
   }
 } myStepperTelemetry;
@@ -106,9 +79,8 @@ protected:
 void setup() {
   Serial.begin(9600);
 
-  mqtt.begin();
-  mqtt.subscriptions = topics;
-  mqtt.subscriptionsCount = sizeof(topics) / sizeof(topics[0]);
+  MQTT.begin();
+  MessageQuerySubscribe(MQTT, topics);
 
   myBlinker12.setup(12);
   myBlinker12.runPeriod = 333333; // 333ms hehehe
@@ -123,7 +95,7 @@ void setup() {
   myButton.onFall = []() {
     myBlinker12.enabled = !myBlinker12.enabled;
     myBeeper.beep();
-    mqtt.send("dev/board05/led12", myBlinker12.enabled ? 1 : 0);
+    MQTT.send("dev/board05/led12", myBlinker12.enabled ? 1 : 0);
   };
 
   pinMode(A0, INPUT);
@@ -141,10 +113,10 @@ void setup() {
 }
 
 void loop() {
+  MQTT.loop();
   myBlinker13.loop();
   myBlinker12.loop();
   myButton.loop();
-  mqtt.loop();
   myA0.loop();
   myBeeper.loop();
   myStepper.loop();
