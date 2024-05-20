@@ -1,6 +1,6 @@
-#include "loop_job.h"
+#include "void_loop.h"
 
-void ShouldLoop::loop() {
+void VoidLoop::loop() {
   this->loopAt(micros());
 }
 

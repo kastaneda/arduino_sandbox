@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <Stream.h>
 
-#include "loop_job.h"
+#include "void_loop.h"
 
 #define MessageBufferSize 64
 
@@ -13,7 +13,7 @@ struct TopicSubscription {
   void (*onMessage)(char *payload);
 };
 
-class MessageHub: public ShouldLoop {
+class MessageHub: public VoidLoop {
 public:
   TopicSubscription *subscriptions = NULL;
   uint8_t subscriptionsCount = 0;

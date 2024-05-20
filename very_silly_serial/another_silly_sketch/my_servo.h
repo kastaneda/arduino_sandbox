@@ -7,7 +7,7 @@
 // probably it should be <Servo.h>
 // and I should know more about building Arduino libraries
 
-#include "loop_job.h"
+#include "void_loop.h"
 
 class MyServo: public ScheduledLoop {
 public:

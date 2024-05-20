@@ -1,15 +1,15 @@
-#ifndef LOOP_JOB_H
-#define LOOP_JOB_H
+#ifndef VOID_LOOP_H
+#define VOID_LOOP_H
 
 #include <Arduino.h>
 
-class ShouldLoop {
+class VoidLoop {
 public:
   virtual void loopAt(unsigned long timeNow) = 0;
   void loop();
 };
 
-class ScheduledLoop: public ShouldLoop {
+class ScheduledLoop: public VoidLoop {
 public:
   unsigned long runPeriod = 1000000; // default: 1s
   void loopAt(unsigned long timeNow);

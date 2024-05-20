@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#include "loop_job.h"
+#include "void_loop.h"
 
 class MyStepper: public ScheduledLoop {
 public:

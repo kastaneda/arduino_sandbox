@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-#include "loop_job.h"
+#include "void_loop.h"
 
-class Debouncer: public ShouldLoop {
+class Debouncer: public VoidLoop {
 public:
   int stateDebounced = 0;
   unsigned long debounceDelay = 50000; // 50ms
