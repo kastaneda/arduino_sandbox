@@ -5,7 +5,7 @@
 #include "debouncer.h"
 #include "blinking_led.h"
 #include "beeper.h"
-#include "my_servo.h"
+#include "servo_loop.h"
 #include "stepper_loop.h"
 
 BlinkingLED myBlinker12, myBlinker13;
@@ -13,7 +13,7 @@ const uint8_t myButtonPin = 2;
 Debouncer myButton;
 Beeper myBeeper;
 StepperLoop myStepper;
-MyServo myServo;
+ServoLoop myServo;
 
 MessageHub mqtt;
 
