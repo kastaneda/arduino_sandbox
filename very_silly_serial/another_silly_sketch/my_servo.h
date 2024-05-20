@@ -2,9 +2,10 @@
 #define MY_SERVO_H
 
 #include <Arduino.h>
-// #include <Servo.h>
 
 #include "Servo.h"
+// probably it should be <Servo.h>
+// and I should know more about building Arduino libraries
 
 #include "loop_job.h"
 
