@@ -1,13 +1,13 @@
-#include "my_servo.h"
+#include "servo_loop.h"
 
-void MyServo::setup(uint8_t pin) {
+void ServoLoop::setup(uint8_t pin) {
   this->pin = pin;
   pinMode(this->pin, OUTPUT);
   digitalWrite(this->pin, LOW);
   this->runPeriod = 500000; // 0.5 s should be enough?
 }
 
-void MyServo::write(int angle) {
+void ServoLoop::write(int angle) {
   if (angle != this->angle) {
     this->angle = angle;
     if (!this->attached) {
@@ -19,7 +19,7 @@ void MyServo::write(int angle) {
   }
 }
 
-void MyServo::runScheduled() {
+void ServoLoop::runScheduled() {
   if (this->attached) {
     this->servo.detach();
     this->attached = false;

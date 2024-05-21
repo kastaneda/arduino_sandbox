@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-#include "loop_job.h"
+#include "void_loop.h"
 
-class Beeper: public ShouldLoop {
+class Beeper: public VoidLoop {
 public:
   void setup(uint8_t pin);
   void loopAt(unsigned long timeNow);

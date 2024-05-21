@@ -1,11 +1,11 @@
-#ifndef MY_STEPPER_H
-#define MY_STEPPER_H
+#ifndef STEPPER_LOOP_H
+#define STEPPER_LOOP_H
 
 #include <Arduino.h>
 
-#include "loop_job.h"
+#include "void_loop.h"
 
-class MyStepper: public ScheduledLoop {
+class StepperLoop: public ScheduledLoop {
 public:
   void setTargetStep(long target);
   long getCurrentStep();

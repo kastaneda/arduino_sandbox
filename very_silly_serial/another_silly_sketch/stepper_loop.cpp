@@ -1,24 +1,24 @@
-#include "my_stepper.h"
+#include "stepper_loop.h"
 
-void MyStepper::setTargetStep(long step) {
+void StepperLoop::setTargetStep(long step) {
   this->targetStep = step;
 }
 
-long MyStepper::getCurrentStep() {
+long StepperLoop::getCurrentStep() {
   return this->currentStep;
 }
 
-bool MyStepper::isBusy() {
+bool StepperLoop::isBusy() {
   return (this->currentStep != this->targetStep);
 }
 
-void MyStepper::setMotorState(uint8_t bitMaskState) {
+void StepperLoop::setMotorState(uint8_t bitMaskState) {
   for (uint8_t i = 0, j = 1; i < sizeof(this->pin); i++, j <<= 1) {
     digitalWrite(this->pin[i], (bitMaskState & j) ? HIGH : LOW);
   }
 }
 
-void MyStepper::setup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3) {
+void StepperLoop::setup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3) {
   this->pin[0] = pin0;
   this->pin[1] = pin1;
   this->pin[2] = pin2;
@@ -33,7 +33,7 @@ void MyStepper::setup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3) {
   }
 }
 
-void MyStepper::runScheduled() {
+void StepperLoop::runScheduled() {
   uint8_t stepInSequence;
   if (this->isBusy()) {
     if (this->currentStep < this->targetStep) {
@@ -42,14 +42,14 @@ void MyStepper::runScheduled() {
       this->currentStep--;
     }
     stepInSequence = this->currentStep & B0011;
-    this->setMotorState(MyStepper::stepSequence[stepInSequence]);
+    this->setMotorState(StepperLoop::stepSequence[stepInSequence]);
   } else {
     this->setMotorState(0);
   }
 }
 
 // Full-step sequence
-const uint8_t MyStepper::stepSequence[4] = {
+const uint8_t StepperLoop::stepSequence[4] = {
   B1000,
   B0100,
   B0010,

@@ -1,114 +1,64 @@
 #include <Arduino.h>
 
-#include "loop_job.h"
-#include "mqtt_io.h"
+#include "void_loop.h"
+#include "mqtt.h"
+#include "telemetry.h"
 #include "debouncer.h"
 #include "blinking_led.h"
 #include "beeper.h"
-#include "my_servo.h"
-#include "my_stepper.h"
+#include "servo_loop.h"
+#include "stepper_loop.h"
 
+MessageQueryHub MQTT;
 BlinkingLED myBlinker12, myBlinker13;
 const uint8_t myButtonPin = 2;
 Debouncer myButton;
 Beeper myBeeper;
-MyStepper myStepper;
-MyServo myServo;
+StepperLoop myStepper;
+ServoLoop myServo;
+TelemetryReporter myA0, myStepperTelemetry;
 
-MessageHub mqtt;
-
-TopicSubscription topics[] = {
+MessageQuerySubscription myTopics[] = {
   {
     "dev/board05/led12/set",
     [](char *payload) {
       myBeeper.beep();
-      myBlinker12.enabled = (payload[0] == '1');
+      myBlinker12.enabled = MQTT.parseBool();
     }
   },
   {
     "dev/board05/led13/set",
     [](char *payload) {
       myBeeper.beep();
-      myBlinker13.enabled = (payload[0] == '1');
+      myBlinker13.enabled = MQTT.parseBool();
     }
   },
   {
     "dev/board05/stepper/set",
     [](char *payload) {
-      long target = 0;
-      uint8_t sign = 1;
-      uint8_t i = 0;
-      if (payload[i] == '-') {
-        sign = -1;
-        i++;
-      }
-      while (payload[i]) {
-        if ((payload[i] >= '0') && (payload[i] <= '9'))
-          target = target * 10 + (payload[i] - '0');
-        i++;
-      }
-      myStepper.setTargetStep(target * sign);
+      myStepper.setTargetStep(MQTT.parseInt());
       myBeeper.beep(10000);
     }
   },
   {
     "dev/board05/beeper/set",
     [](char *payload) {
-      unsigned long duration = 0;
-      uint8_t i = 0;
-      while (payload[i]) {
-        if ((payload[i] >= '0') && (payload[i] <= '9'))
-          duration = duration * 10 + (payload[i] - '0');
-        i++;
-      }
-      myBeeper.beep(duration);
+      myBeeper.beep(MQTT.parseInt());
     }
   },
   {
     "dev/board05/servo/set",
     [](char *payload) {
-      int angle = 0;
-      uint8_t i = 0;
-      while (payload[i]) {
-        if ((payload[i] >= '0') && (payload[i] <= '9'))
-          angle = angle * 10 + (payload[i] - '0');
-        i++;
-      }
-      myServo.write(angle);
+      myServo.write(MQTT.parseInt());
     }
   }
 };
 
-class MyAnalogReader: public ScheduledLoop {
-public:
-  uint8_t pin;
-protected:
-  void runScheduled() {
-    if (Serial.availableForWrite() > 20) {
-      mqtt.send("dev/board05/A0", analogRead(this->pin));
-    }
-  }
-} myA0;
-
-class MyStepperReporter: public ScheduledLoop {
-protected:
-  long prevReporting = -1;
-  void runScheduled() {
-    long reporting;
-    reporting = myStepper.getCurrentStep();
-    if (reporting != this->prevReporting) {
-      this->prevReporting = reporting;
-      mqtt.send("dev/board05/stepper", reporting);
-    }
-  }
-} myStepperTelemetry;
-
 void setup() {
   Serial.begin(9600);
 
-  mqtt.begin();
-  mqtt.subscriptions = topics;
-  mqtt.subscriptionsCount = sizeof(topics) / sizeof(topics[0]);
+  MQTT.begin();
+  MessageQuerySubscribe(MQTT, myTopics);
 
   myBlinker12.setup(12);
   myBlinker12.runPeriod = 333333; // 333ms hehehe
@@ -123,28 +73,33 @@ void setup() {
   myButton.onFall = []() {
     myBlinker12.enabled = !myBlinker12.enabled;
     myBeeper.beep();
-    mqtt.send("dev/board05/led12", myBlinker12.enabled ? 1 : 0);
+    MQTT.send("dev/board05/led12", (long) (myBlinker12.enabled ? 1 : 0));
   };
 
   pinMode(A0, INPUT);
   //analogReference(INTERNAL); // on USB it makes only worse
-  myA0.pin = A0;
-  myA0.runPeriod = 400000; // 400ms
+  myA0.setup(&MQTT, "dev/board05/A0", 400000);
+  myA0.readingSource = []() {
+    return (long) analogRead(A0);
+  };
 
   myBeeper.setup(5);
 
   myStepper.setup(8, 9, 10, 11);
 
-  myStepperTelemetry.runPeriod = 150000; // 150ms
+  myStepperTelemetry.setup(&MQTT, "dev/board05/stepper", 150000);
+  myStepperTelemetry.readingSource = []() {
+    return myStepper.getCurrentStep();
+  };
 
   myServo.setup(7);
 }
 
 void loop() {
+  MQTT.loop();
   myBlinker13.loop();
   myBlinker12.loop();
   myButton.loop();
-  mqtt.loop();
   myA0.loop();
   myBeeper.loop();
   myStepper.loop();

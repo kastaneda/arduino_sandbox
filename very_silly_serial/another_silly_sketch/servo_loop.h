@@ -1,14 +1,15 @@
-#ifndef MY_SERVO_H
-#define MY_SERVO_H
+#ifndef SERVO_LOOP_H
+#define SERVO_LOOP__H
 
 #include <Arduino.h>
-// #include <Servo.h>
 
 #include "Servo.h"
+// probably it should be <Servo.h>
+// and I should know more about building Arduino libraries
 
-#include "loop_job.h"
+#include "void_loop.h"
 
-class MyServo: public ScheduledLoop {
+class ServoLoop: public ScheduledLoop {
 public:
   void setup(uint8_t pin);
   void write(int angle);
