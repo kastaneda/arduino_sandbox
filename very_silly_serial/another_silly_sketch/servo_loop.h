@@ -2,10 +2,7 @@
 #define SERVO_LOOP__H
 
 #include <Arduino.h>
-
-#include "Servo.h"
-// probably it should be <Servo.h>
-// and I should know more about building Arduino libraries
+#include <Servo.h>
 
 #include "void_loop.h"
 
