@@ -22,15 +22,17 @@ MessageQuerySubscription myTopics[] = {
   {
     "dev/board05/led12/set",
     [](char *payload) {
-      myBeeper.beep();
-      myBlinker12.enabled = MQTT.parseBool();
+      bool newState = MQTT.parseBool();
+      if (myBlinker12.enabled != newState) myBeeper.beep();
+      myBlinker12.enabled = newState;
     }
   },
   {
     "dev/board05/led13/set",
     [](char *payload) {
-      myBeeper.beep();
-      myBlinker13.enabled = MQTT.parseBool();
+      bool newState = MQTT.parseBool();
+      if (myBlinker13.enabled != newState) myBeeper.beep();
+      myBlinker13.enabled = newState;
     }
   },
   {

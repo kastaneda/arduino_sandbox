@@ -20,3 +20,24 @@ mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m 1
 mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m ''
 
 Hmmmmm
+
+------------------------------------------------------------------------
+
+Merge subscriptions and telemetry?
+
+    readingSource
+    lastReading
+    updateInterval
+    updateUnchangedInterval
+    forceUpdate (on start)
+
+    onMessage
+
+Unidirectional: write only: Servo
+Unidirectional: read only:  knob, button
+Bi-directional: read/write: Stepper, Blinker
+
+------------------------------------------------------------------------
+
+Beeper, BlinkingLED -> some scheduled sequence
+Morse code beeper :)
