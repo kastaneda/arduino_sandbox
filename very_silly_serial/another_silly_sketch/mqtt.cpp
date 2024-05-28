@@ -14,11 +14,12 @@ void MessageQueryHub::loopAt(unsigned long timeNow) {
 }
 
 void MessageQueryHub::handleInboundChar(char incomingChar) {
-  if (this->messageBufferCount < (MessageQueryBufferSize - 1))
-    this->messageBuffer[this->messageBufferCount++] = incomingChar;
+  if (this->messageBufferCount < (MessageQueryBufferSize - 2))
+    if (incomingChar >= 32)
+      this->messageBuffer[this->messageBufferCount++] = incomingChar;
 
   if (incomingChar == '\n' || incomingChar == '\r') {
-    this->messageBuffer[this->messageBufferCount + 1] = 0;
+    this->messageBuffer[this->messageBufferCount] = 0;
     this->handleInboundLine();
     this->messageBufferCount = 0;
   }
@@ -36,7 +37,7 @@ void MessageQueryHub::handleInboundLine() {
         this->subscriptions[i].onMessage(this->payload);
         return;
       }
-      j = MessageQueryBufferSize;
+      break;
     }
   }
 }
@@ -45,14 +46,18 @@ long MessageQueryHub::parseInt() {
   long result = 0;
   uint8_t sign = 1;
   uint8_t i = 0;
-  if (this->payload[i] == '-') {
+  if (this->payload[i] == '+') i++;
+  else if (this->payload[i] == '-') {
     sign = -1;
     i++;
   }
   while (this->payload[i]) {
-    if ((this->payload[i] >= '0') && (this->payload[i] <= '9'))
+    this->io->print(this->payload[i], HEX);
+    this->io->print('\n');
+    if ((this->payload[i] >= '0') && (this->payload[i] <= '9')) {
       result = result * 10 + (this->payload[i] - '0');
-    i++;
+      i++;
+    } else break;
   }
   return sign * result;
 }

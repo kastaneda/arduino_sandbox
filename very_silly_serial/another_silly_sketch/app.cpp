@@ -102,7 +102,7 @@ void loop() {
   myBlinker13.loop();
   myBlinker12.loop();
   myButton.loop();
-  myA0.loop();
+  //myA0.loop();
   myBeeper.loop();
   myStepper.loop();
   myStepperTelemetry.loop();
