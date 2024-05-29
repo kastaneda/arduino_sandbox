@@ -14,24 +14,17 @@ New features
 
 ------------------------------------------------------------------------
 
-FIXME
-mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m 0
-mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m 1
-mosquitto_pub -h 192.168.0.82 -t dev/board05/led12/set -m ''
-
-Hmmmmm
-
-------------------------------------------------------------------------
-
 Merge subscriptions and telemetry?
 
-    readingSource
-    lastReading
-    updateInterval
-    updateUnchangedInterval
-    forceUpdate (on start)
-
-    onMessage
+    basePath
+        report to 'basePath'
+            currentValue := readingSource
+                compare with lastValue
+                updateInterval
+                updateUnchangedInterval
+        listen to 'basePath/set'
+            lastValue := message
+            onMessage
 
 Unidirectional: write only: Servo
 Unidirectional: read only:  knob, button
@@ -39,5 +32,9 @@ Bi-directional: read/write: Stepper, Blinker
 
 ------------------------------------------------------------------------
 
-Beeper, BlinkingLED -> some scheduled sequence
-Morse code beeper :)
+Beeper, BlinkingLED:
+ - use some internal sequence
+ - sequence may alter (beep length)
+ - sequence may be or may be not endless loop
+
+Morse code beeper?
