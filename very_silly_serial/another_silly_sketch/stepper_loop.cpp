@@ -50,8 +50,8 @@ void StepperLoop::runScheduled() {
 
 // Full-step sequence
 const uint8_t StepperLoop::stepSequence[4] = {
-  B1000,
-  B0100,
-  B0010,
-  B0001
+  B1100,
+  B0110,
+  B0011,
+  B1001
 };
