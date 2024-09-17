@@ -1,4 +1,3 @@
-BOARD_TAG = uno
-# FIXME
+BOARD=d1_mini_clone
 
-include /usr/share/arduino/Arduino.mk
+include ~/makeEspArduino/makeEspArduino.mk
