@@ -1,0 +1,6 @@
+#!/bin/sh
+while /bin/true; do
+  socat -d -d file:/dev/ttyACM0,nonblock,cs8,cstopb=0,raw,echo=0 exec:./mqtt_io
+  pkill -A -s 0
+  sleep 5
+done
