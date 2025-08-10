@@ -11,7 +11,7 @@ d1 = machine.Pin(5, machine.Pin.OUT)
 d1.value(1) # now both capacitor legs is HIGH
 time.sleep_ms(500)
 # set D1 leg to high-impendance state
-d1 = machine.Pin(5, machine.Pin.IN)
+d1 = machine.Pin(5, machine.Pin.IN, machine.Pin.PULL_UP)
 time.sleep_ms(50)
 
 # final short blink
